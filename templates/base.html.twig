@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ site.title }}{% if page_title is defined and page_title %} - {{ page_title }}{% endif %}</title>
+    {% if meta_description is defined and meta_description %}
+        <meta name="description" content="{{ meta_description }}">
+    {% endif %}
+    {% if canonical_url is defined and canonical_url %}
+        <link rel="canonical" href="{{ canonical_url }}">
+    {% endif %}
+    {% block meta %}{% endblock %}
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="{{ site.title }}" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+    <header class="site-header">
+        {% block header %}
+            <a href="/" class="site-header__title">{{ site.title }}</a>
+            <nav class="site-header__nav">
+                {% for item in site.navigation %}
+                    <a href="{{ item.url }}" class="site-header__nav-link">{{ item.label }}</a>
+                {% endfor %}
+            </nav>
+        {% endblock %}
+    </header>
+
+    <main class="sol-container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="sol-container sol-text-center sol-mt-lg">
+        <p class="text-sm text-muted">{{ site.footer }}</p>
+    </footer>
+</body>
+</html>

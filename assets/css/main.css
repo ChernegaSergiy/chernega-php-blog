@@ -1,0 +1,1191 @@
+/* ==========================================================================
+   SOLARIZED TERMINAL UI FRAMEWORK
+   A modular framework for creating terminal-style applications
+   ========================================================================== */
+
+/* ==========================================================================
+   CORE: VARIABLES & RESET
+   ========================================================================== */
+:root {
+    /* Solarized Palette */
+    --base03: #002b36;
+    --base02: #073642;
+    --base01: #586e75;
+    --base00: #657b83;
+    --base0: #839496;
+    --base1: #93a1a1;
+    --base2: #eee8d5;
+    --base3: #fdf6e3;
+
+    /* Accent Colors */
+    --yellow: #b58900;
+    --orange: #cb4b16;
+    --red: #dc322f;
+    --magenta: #d33682;
+    --violet: #6c71c4;
+    --blue: #268bd2;
+    --cyan: #2aa198;
+    --green: #859900;
+
+    /* Semantic Color Mapping */
+    --color-primary: var(--blue);
+    --color-secondary: var(--cyan);
+    --color-success: var(--green);
+    --color-warning: var(--yellow);
+    --color-error: var(--red);
+    --color-info: var(--violet);
+
+    /* Surface & Text Colors */
+    --color-background: var(--base3);
+    --color-text-primary: var(--base01);
+    --color-text-secondary: var(--base00);
+    --color-surface: var(--base2);
+    --color-surface-elevated: var(--base02);
+    --color-surface-terminal: var(--base03);
+
+    /* Typography */
+    --font-family-mono: 'Courier New', 'Lucida Console', Monaco, monospace;
+    --font-size-base: 14px;
+    --font-size-sm: 12px;
+    --font-size-lg: 18px;
+    --font-size-xl: 24px;
+    --line-height-base: 1.4;
+
+    /* Spacing System */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-xxl: 48px;
+
+    /* Border & Effects */
+    --border-width-base: 2px;
+    --border-width-thick: 3px;
+    --border-radius: 0;
+
+    /* Animation */
+    --transition-duration: 0s;
+    --transition-timing: linear;
+
+    /* Z-index layers */
+    --z-index-dropdown: 1000;
+    --z-index-sticky: 1020;
+    --z-index-fixed: 1030;
+    --z-index-modal-backdrop: 1040;
+    --z-index-modal: 1050;
+    --z-index-popover: 1060;
+    --z-index-tooltip: 1070;
+}
+
+/* Global Reset & Base Styles */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+}
+
+/* ==========================================================================
+   CORE: TYPOGRAPHY
+   ========================================================================== */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--color-text-primary);
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: var(--font-size-xl);
+    letter-spacing: 2px;
+}
+
+h2 {
+    font-size: var(--font-size-lg);
+}
+
+h3 {
+    font-size: var(--font-size-base);
+}
+
+h4, h5, h6 {
+    font-size: var(--font-size-sm);
+}
+
+p {
+    margin-bottom: var(--space-md);
+}
+
+a {
+    color: var(--color-secondary);
+    text-decoration: none;
+    border-bottom: var(--border-width-base) dotted var(--color-secondary);
+    transition: all var(--transition-duration) var(--transition-timing);
+}
+
+a:hover {
+    color: var(--color-background);
+    background-color: var(--color-secondary);
+    border-color: transparent;
+}
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-muted { color: var(--base1); }
+.text-accent { color: var(--color-primary); }
+.text-success { color: var(--color-success); }
+.text-warning { color: var(--color-warning); }
+.text-error { color: var(--color-error); }
+
+/* Terminal-style heading prefixes */
+h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
+    color: var(--color-error);
+}
+h1::before { content: "# "; }
+h2::before { content: "## "; }
+h3::before { content: "### "; }
+h4::before { content: "#### "; }
+h5::before { content: "##### "; }
+h6::before { content: "###### "; }
+
+/* ==========================================================================
+   CORE: LAYOUT (12-COLUMN GRID)
+   ========================================================================== */
+.sol-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: var(--space-md);
+}
+
+.sol-container > *:not(:last-child) {
+    margin-bottom: var(--space-lg);
+}
+
+.sol-container--fluid {
+    max-width: none;
+    width: 100%;
+}
+
+.sol-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-md);
+}
+
+.sol-card .sol-grid .sol-surface {
+    margin-bottom: 0;
+}
+
+/* By default, all columns are full-width (mobile-first) */
+[class^="sol-col-"] {
+    grid-column: span 12;
+}
+
+/* Medium screens (tablets) */
+@media (min-width: 768px) {
+    .sol-col-md-1 { grid-column: span 1; }
+    .sol-col-md-2 { grid-column: span 2; }
+    .sol-col-md-3 { grid-column: span 3; }
+    .sol-col-md-4 { grid-column: span 4; }
+    .sol-col-md-5 { grid-column: span 5; }
+    .sol-col-md-6 { grid-column: span 6; }
+    .sol-col-md-7 { grid-column: span 7; }
+    .sol-col-md-8 { grid-column: span 8; }
+    .sol-col-md-9 { grid-column: span 9; }
+    .sol-col-md-10 { grid-column: span 10; }
+    .sol-col-md-11 { grid-column: span 11; }
+    .sol-col-md-12 { grid-column: span 12; }
+}
+
+/* Large screens (desktops) */
+@media (min-width: 992px) {
+    .sol-col-lg-1 { grid-column: span 1; }
+    .sol-col-lg-2 { grid-column: span 2; }
+    .sol-col-lg-3 { grid-column: span 3; }
+    .sol-col-lg-4 { grid-column: span 4; }
+    .sol-col-lg-5 { grid-column: span 5; }
+    .sol-col-lg-6 { grid-column: span 6; }
+    .sol-col-lg-7 { grid-column: span 7; }
+    .sol-col-lg-8 { grid-column: span 8; }
+    .sol-col-lg-9 { grid-column: span 9; }
+    .sol-col-lg-10 { grid-column: span 10; }
+    .sol-col-lg-11 { grid-column: span 11; }
+    .sol-col-lg-12 { grid-column: span 12; }
+}
+
+.sol-flex {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.sol-flex--col { flex-direction: column; }
+.sol-flex--center { justify-content: center; align-items: center; }
+.sol-flex--between { justify-content: space-between; }
+.sol-flex--end { justify-content: flex-end; }
+.sol-flex--start { justify-content: flex-start; }
+
+/* ==========================================================================
+   COMPONENT: SITE HEADER
+   ========================================================================== */
+.site-header {
+    border-bottom: 3px solid var(--base01);
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.site-header__title {
+    color: var(--base01);
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: none;
+}
+
+.site-header__title:hover {
+    color: var(--base01);
+}
+
+.site-header__title:hover,
+.site-header__title:active {
+    background-color: transparent;
+}
+
+.site-header__title::before {
+    content: "[";
+    color: var(--yellow);
+}
+
+.site-header__title::after {
+    content: "]";
+    color: var(--yellow);
+}
+
+.site-header__nav {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.site-header__nav-link {
+    color: var(--cyan);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    border: 2px solid transparent;
+    padding: 4px 8px;
+}
+
+.site-header__nav-link::before {
+    content: "> ";
+    color: var(--green);
+}
+
+.site-header__nav-link:hover {
+    border-color: var(--cyan);
+    background: var(--base2);
+    color: var(--cyan);
+}
+
+.site-header__nav-link.active {
+    border-color: var(--cyan);
+    background: var(--base2);
+}
+
+/* ==========================================================================
+   COMPONENT: SURFACES
+   ========================================================================== */
+.sol-surface {
+    background-color: var(--color-surface);
+    border: var(--border-width-base) solid var(--color-text-primary);
+    padding: var(--space-md);
+    transition: all var(--transition-duration) var(--transition-timing);
+}
+
+.sol-surface--elevated {
+    background-color: var(--color-surface-elevated);
+    color: var(--base0);
+}
+
+.sol-surface--interactive {
+    cursor: pointer;
+}
+
+.sol-surface--interactive:hover {
+    border-color: var(--color-primary);
+}
+
+.sol-surface--inline-content {
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+/* ==========================================================================
+   COMPONENT: TERMINAL ELEMENTS
+   ========================================================================== */
+.sol-terminal, .sol-code {
+    background-color: var(--color-surface-terminal);
+    color: var(--base0);
+    padding: var(--space-md);
+    border: var(--border-width-base) solid var(--color-success);
+    overflow-x: auto;
+}
+
+.sol-prompt::before {
+    content: "$ ";
+    color: var(--color-warning);
+    font-weight: bold;
+}
+
+.sol-code {
+    position: relative;
+}
+
+.sol-code[data-lang]::before {
+    content: attr(data-lang);
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--color-success);
+    color: var(--color-surface-terminal);
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   COMPONENT: BUTTONS
+   ========================================================================== */
+.sol-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-base);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    border: var(--border-width-base) solid transparent;
+    transition: all var(--transition-duration) var(--transition-timing);
+    text-align: center;
+}
+
+.sol-btn--primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+.sol-btn--secondary {
+    background-color: var(--color-secondary);
+    border-color: var(--color-secondary);
+    color: var(--color-background);
+}
+
+.sol-btn--success {
+    background-color: var(--color-success);
+    border-color: var(--color-success);
+    color: var(--color-background);
+}
+
+.sol-btn--warning {
+    background-color: var(--color-warning);
+    border-color: var(--color-warning);
+    color: var(--color-background);
+}
+
+.sol-btn--error {
+    background-color: var(--color-error);
+    border-color: var(--color-error);
+    color: var(--color-background);
+}
+
+.sol-btn.sol-btn--outline {
+    background-color: transparent;
+}
+.sol-btn--primary.sol-btn--outline { color: var(--color-primary); border-color: var(--color-primary); }
+.sol-btn--secondary.sol-btn--outline { color: var(--color-secondary); border-color: var(--color-secondary); }
+.sol-btn--success.sol-btn--outline { color: var(--color-success); border-color: var(--color-success); }
+.sol-btn--warning.sol-btn--outline { color: var(--color-warning); border-color: var(--color-warning); }
+.sol-btn--error.sol-btn--outline { color: var(--color-error); border-color: var(--color-error); }
+
+/* Hover for SOLID buttons (inverts to outline) */
+.sol-btn--primary:hover { background-color: transparent; color: var(--color-primary); }
+.sol-btn--secondary:hover { background-color: transparent; color: var(--color-secondary); }
+.sol-btn--success:hover { background-color: transparent; color: var(--color-success); }
+.sol-btn--warning:hover { background-color: transparent; color: var(--color-warning); }
+.sol-btn--error:hover { background-color: transparent; color: var(--color-error); }
+
+/* Hover for OUTLINE buttons (inverts to solid) */
+.sol-btn--primary.sol-btn--outline:hover { background-color: var(--color-primary); color: var(--color-background); }
+.sol-btn--secondary.sol-btn--outline:hover { background-color: var(--color-secondary); color: var(--color-background); }
+.sol-btn--success.sol-btn--outline:hover { background-color: var(--color-success); color: var(--color-background); }
+.sol-btn--warning.sol-btn--outline:hover { background-color: var(--color-warning); color: var(--color-background); }
+.sol-btn--error.sol-btn--outline:hover { background-color: var(--color-error); color: var(--color-background); }
+
+.sol-btn--sm {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-sm);
+}
+
+.sol-btn--lg {
+    padding: var(--space-lg) var(--space-xl);
+    font-size: var(--font-size-lg);
+}
+
+/* Button Group */
+.sol-btn-group {
+    display: flex;
+}
+.sol-btn-group .sol-btn {
+    border-right-width: 0;
+    border-radius: 0;
+}
+.sol-btn-group .sol-btn:first-child { border-radius: 0; }
+.sol-btn-group .sol-btn:last-child { border-right-width: var(--border-width-base); }
+
+/* ==========================================================================
+   COMPONENT: FORMS
+   ========================================================================== */
+.sol-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.sol-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.sol-label {
+    color: var(--color-text-primary);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: var(--font-size-sm);
+}
+
+.sol-input,
+.sol-textarea,
+.sol-select {
+    padding: var(--space-sm);
+    border: var(--border-width-base) solid var(--color-text-primary);
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-base);
+    resize: vertical;
+    transition: all var(--transition-duration) var(--transition-timing);
+}
+
+.sol-input:focus,
+.sol-textarea:focus,
+.sol-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.sol-checkbox,
+.sol-radio {
+    margin-right: var(--space-sm);
+    accent-color: var(--color-primary);
+}
+
+.sol-form-hint {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin-top: var(--space-xs);
+}
+
+/* Custom styling for file input */
+.sol-input[type="file"] {
+    padding: 0;
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.sol-input[type="file"]::file-selector-button {
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-base);
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: var(--space-md);
+    background-color: var(--color-primary);
+    border: var(--border-width-base) solid var(--color-primary);
+    color: var(--color-background);
+}
+
+.sol-input[type="file"]::file-selector-button:hover {
+    background-color: var(--color-background);
+    color: var(--color-primary);
+}
+
+/* ==========================================================================
+   COMPONENT: NAVIGATION
+   ========================================================================== */
+.sol-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    list-style: none;
+}
+
+.sol-nav-item a {
+    color: var(--color-secondary);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    border: var(--border-width-base) solid transparent;
+    padding: var(--space-xs) var(--space-sm);
+    transition: all var(--transition-duration) var(--transition-timing);
+}
+
+.sol-nav-item a::before {
+    color: var(--color-success);
+}
+
+.sol-nav-item a:hover {
+    border-color: var(--color-secondary);
+    background-color: var(--color-surface);
+}
+
+.sol-nav-item--active a,
+.sol-nav-item--active a:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background-color: var(--color-surface);
+}
+
+/* Breadcrumb Navigation */
+.sol-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin-bottom: var(--space-md);
+}
+
+.sol-breadcrumb-item {
+    display: flex;
+    align-items: center;
+}
+
+.sol-breadcrumb-item + .sol-breadcrumb-item::before {
+    content: "/";
+    color: var(--color-text-secondary);
+    margin: 0 var(--space-sm);
+}
+
+.sol-breadcrumb-item a {
+    color: var(--color-secondary);
+    text-decoration: none;
+}
+
+.sol-breadcrumb-item.active {
+    color: var(--color-text-primary);
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   COMPONENT: ALERTS & MESSAGES
+   ========================================================================== */
+.sol-alert {
+    padding: var(--space-md);
+    border: var(--border-width-thick) solid;
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.sol-alert--success { background-color: var(--color-success); border-color: var(--color-success); color: var(--color-background); }
+.sol-alert--warning { background-color: var(--color-warning); border-color: var(--color-warning); color: var(--color-background); }
+.sol-alert--error { background-color: var(--color-error); border-color: var(--color-error); color: var(--color-background); }
+.sol-alert--info { background-color: var(--color-info); border-color: var(--color-info); color: var(--color-background); }
+
+/* Toast notifications */
+.sol-toast-container {
+    position: fixed;
+    top: var(--space-md);
+    right: var(--space-md);
+    z-index: var(--z-index-tooltip);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.sol-toast {
+    padding: var(--space-md);
+    border: var(--border-width-base) solid;
+    background-color: var(--color-background);
+    animation: none;
+    max-width: 350px;
+}
+
+.sol-toast--success { border-color: var(--color-success); color: var(--color-success); }
+.sol-toast--warning { border-color: var(--color-warning); color: var(--color-warning); }
+.sol-toast--error { border-color: var(--color-error); color: var(--color-error); }
+.sol-toast--info { border-color: var(--color-info); color: var(--color-info); }
+
+/* ==========================================================================
+   COMPONENT: TABLES
+   ========================================================================== */
+.sol-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: var(--border-width-thick) solid var(--color-text-primary);
+}
+
+.sol-table th,
+.sol-table td {
+    border: var(--border-width-base) solid var(--color-text-primary);
+    padding: var(--space-sm);
+    text-align: left;
+}
+
+.sol-table th {
+    background-color: var(--color-text-primary);
+    color: var(--color-background);
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.sol-table tr:nth-child(even) {
+    background-color: var(--color-surface);
+}
+
+.sol-table tr:hover {
+    background-color: var(--color-text-secondary);
+    color: var(--color-surface-elevated);
+}
+
+/* ==========================================================================
+   COMPONENT: LISTS
+   ========================================================================== */
+ul, ol {
+    margin-left: var(--space-lg);
+    margin-bottom: var(--space-md);
+}
+
+.sol-list--unstyled {
+    list-style: none;
+    margin-left: 0;
+}
+
+.sol-list--terminal li {
+    position: relative;
+    list-style: none;
+    padding-left: var(--space-md);
+}
+
+.sol-list--terminal li::before {
+    content: "▸";
+    color: var(--color-success);
+    position: absolute;
+    left: 0;
+}
+
+/* ==========================================================================
+   COMPONENT: CARDS
+   ========================================================================== */
+.sol-card {
+    background-color: var(--color-surface);
+    border: var(--border-width-base) solid var(--color-text-primary);
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+}
+
+.sol-card__header {
+    border-bottom: var(--border-width-base) dotted var(--color-secondary);
+    padding-bottom: var(--space-sm);
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+    font-weight: bold;
+    color: var(--color-primary);
+}
+
+.sol-card__body {
+    flex-grow: 1;
+}
+
+.sol-card__footer {
+    border-top: var(--border-width-base) dotted var(--color-secondary);
+    padding-top: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.sol-card.sol-mb-lg {
+    margin-bottom: var(--space-lg);
+}
+
+/* ==========================================================================
+   COMPONENT: PROGRESS BAR
+   ========================================================================== */
+.sol-progress-bar {
+    background-color: var(--color-surface-elevated);
+    border: var(--border-width-base) solid var(--color-text-primary);
+    margin-bottom: var(--space-md);
+    width: 100%;
+}
+
+.sol-progress-bar__fill {
+    height: var(--space-md);
+    background-color: var(--color-success);
+    transition: none;
+}
+
+.sol-progress-bar--animated .sol-progress-bar__fill {
+    animation: progress-fill 2s linear infinite;
+}
+
+/* ==========================================================================
+   COMPONENT: STATUS LISTS
+   ========================================================================== */
+.sol-status-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sol-status-list li {
+    position: relative;
+    padding-left: var(--space-md);
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-family-mono);
+}
+
+.sol-status-list li::before {
+    content: "●";
+    position: absolute;
+    left: 0;
+}
+
+.sol-status-list li.status--success::before {
+    content: "✓";
+    color: var(--color-success);
+    font-weight: bold;
+}
+
+.sol-status-list li.status--warning::before {
+    content: "!";
+    color: var(--color-warning);
+    font-weight: bold;
+}
+
+.sol-status-list li.status--error::before {
+    content: "✗";
+    color: var(--color-error);
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   COMPONENT: EXTENDED BUTTONS
+   ========================================================================== */
+.sol-btn--outline {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.sol-btn--outline:hover {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+/* ==========================================================================
+   COMPONENT: MODALS
+   ========================================================================== */
+.sol-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: var(--z-index-modal-backdrop);
+    padding: var(--space-md);
+}
+
+.sol-modal {
+    background-color: var(--color-background);
+    border: var(--border-width-thick) solid var(--color-primary);
+    padding: var(--space-lg);
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: none;
+}
+
+.sol-modal__header {
+    border-bottom: var(--border-width-base) solid var(--color-text-primary);
+    padding-bottom: var(--space-md);
+    margin-bottom: var(--space-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sol-modal__title {
+    margin: 0;
+    color: var(--color-primary);
+}
+
+.sol-modal__close {
+    background: none;
+    border: none;
+    font-size: var(--font-size-lg);
+    cursor: pointer;
+    color: var(--color-text-secondary);
+}
+
+.sol-modal__close:hover {
+    color: var(--color-error);
+}
+
+.sol-modal__body {
+    margin-bottom: var(--space-lg);
+}
+
+.sol-modal__footer {
+    border-top: var(--border-width-base) solid var(--color-text-primary);
+    padding-top: var(--space-md);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+}
+
+/* ==========================================================================
+   COMPONENT: TABS
+   ========================================================================== */
+.sol-tabs {
+    border-bottom: var(--border-width-base) solid var(--color-text-primary);
+    margin-bottom: var(--space-md);
+}
+
+.sol-tab-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: var(--space-md);
+}
+
+.sol-tab {
+    padding: var(--space-sm) var(--space-md);
+    border: var(--border-width-base) solid transparent;
+    border-bottom: none;
+    cursor: pointer;
+    background: none;
+    font-family: inherit;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: var(--color-text-secondary);
+    position: relative;
+    bottom: -2px;
+    transition: all var(--transition-duration) var(--transition-timing);
+}
+
+.sol-tab:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background-color: var(--color-background);
+}
+
+.sol-tab--active {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background-color: var(--color-background);
+}
+
+.sol-tab-panel {
+    display: none;
+}
+
+.sol-tab-panel--active {
+    display: block;
+}
+
+/* ==========================================================================
+   COMPONENT: TOOLTIPS
+   ========================================================================== */
+.sol-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.sol-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: var(--space-sm);
+    background-color: var(--color-surface-terminal);
+    color: var(--color-text-secondary);
+    border: var(--border-width-base) solid var(--color-success);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+    z-index: var(--z-index-tooltip);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0s, visibility 0s;
+}
+
+.sol-tooltip:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ==========================================================================
+   COMPONENT: PAGINATION
+   ========================================================================== */
+.sol-pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: var(--space-lg) 0;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-sm) var(--space-md);
+}
+
+.sol-pagination__item {
+    display: flex;
+}
+
+.sol-pagination__link {
+    padding: var(--space-xs);
+    border: none;
+    border-bottom: var(--border-width-base) dotted var(--color-secondary);
+    text-decoration: none;
+    color: var(--color-secondary);
+    font-weight: bold;
+    background: none;
+}
+
+.sol-pagination__link::before {
+    content: "$ ";
+    color: var(--color-warning);
+}
+
+.sol-pagination__link:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-background);
+    border-bottom-color: transparent;
+}
+
+.sol-pagination__link--active {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    border-bottom-color: transparent;
+}
+
+.sol-pagination__link--disabled {
+    color: var(--color-text-secondary);
+    pointer-events: none;
+    border-bottom-style: solid;
+    border-bottom-color: var(--color-text-secondary);
+    opacity: 0.6;
+}
+
+.sol-pagination__link--disabled:hover {
+    background-color: transparent;
+    color: var(--color-text-secondary);
+}
+
+/* ==========================================================================
+   COMPONENT: BADGES
+   ========================================================================== */
+.sol-badge {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-sm);
+    font-weight: bold;
+    text-transform: uppercase;
+    border: var(--border-width-base) solid;
+    margin-right: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+/* ==========================================================================
+   UTILITY CLASSES
+   ========================================================================== */
+.sol-m-0 { margin: 0; }
+.sol-m-sm { margin: var(--space-sm); }
+.sol-m-md { margin: var(--space-md); }
+.sol-m-lg { margin: var(--space-lg); }
+
+.sol-mt-0 { margin-top: 0; }
+.sol-mt-sm { margin-top: var(--space-sm); }
+.sol-mt-md { margin-top: var(--space-md); }
+.sol-mt-lg { margin-top: var(--space-lg); }
+
+.sol-mb-0 { margin-bottom: 0; }
+.sol-mb-sm { margin-bottom: var(--space-sm); }
+.sol-mb-md { margin-bottom: var(--space-md); }
+.sol-mb-lg { margin-bottom: var(--space-lg); }
+
+.sol-p-0 { padding: 0; }
+.sol-p-sm { padding: var(--space-sm); }
+.sol-p-md { padding: var(--space-md); }
+.sol-p-lg { padding: var(--space-lg); }
+
+.sol-pt-0 { padding-top: 0; }
+.sol-pt-sm { padding-top: var(--space-sm); }
+.sol-pt-md { padding-top: var(--space-md); }
+.sol-pt-lg { padding-top: var(--space-lg); }
+
+.sol-pb-0 { padding-bottom: 0; }
+.sol-pb-sm { padding-bottom: var(--space-sm); }
+.sol-pb-md { padding-bottom: var(--space-md); }
+.sol-pb-lg { padding-bottom: var(--space-lg); }
+
+.sol-text-center { text-align: center; }
+.sol-text-right { text-align: right; }
+.sol-text-left { text-align: left; }
+
+.sol-text-upper { text-transform: uppercase; }
+.sol-text-bold { font-weight: bold; }
+
+.sol-hidden { display: none; }
+.sol-block { display: block; }
+.sol-inline-block { display: inline-block; }
+.sol-flex { display: flex; }
+
+.sol-w-full { width: 100%; }
+.sol-w-auto { width: auto; }
+
+.sol-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ==========================================================================
+   CONTENT-SPECIFIC STYLES
+   ========================================================================== */
+.post-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: var(--space-md) 0;
+}
+
+.sol-surface, .sol-card, .post-content {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-word;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 768px) {
+    .sol-container {
+        padding: var(--space-sm);
+    }
+
+    .sol-flex {
+        flex-direction: column;
+    }
+
+    .sol-btn-group {
+        flex-direction: column;
+    }
+
+    .sol-btn-group .sol-btn {
+        border-right-width: var(--border-width-base);
+        border-bottom-width: 0;
+    }
+    .sol-btn-group .sol-btn:last-child {
+        border-bottom-width: var(--border-width-base);
+    }
+
+    .sol-tab-list {
+        flex-direction: column;
+        gap: var(--space-xs);
+    }
+
+    .sol-tab {
+        border: var(--border-width-base) solid transparent;
+        border-left: none;
+        border-right: none;
+        width: 100%;
+        text-align: left;
+        bottom: 0;
+    }
+
+    .sol-tab--active {
+        border-color: var(--color-primary);
+        border-left: none;
+        border-right: none;
+    }
+
+    .sol-modal {
+        padding: var(--space-md);
+    }
+
+    .sol-pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--space-xs);
+    }
+}
+
+/* Print styles */
+@media print {
+    .sol-btn,
+    .sol-nav,
+    .sol-modal-backdrop {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    a {
+        color: black;
+        text-decoration: underline;
+    }
+}

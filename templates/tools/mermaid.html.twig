@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% set page_title = 'Візуалізатор Mermaid.js' %}
+
+{% block meta %}
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="sol-terminal sol-mb-lg">
+        <span class="sol-prompt">run mermaid_visualizer</span>
+    </div>
+
+    <div class="sol-grid sol-mb-lg">
+        <div class="sol-col-md-7">
+            <div class="sol-card">
+                <div class="sol-card__header">Синтаксис Mermaid.js</div>
+                <div class="sol-card__body">
+                    <p>Введіть синтаксис Mermaid.js для візуалізації:</p>
+                    <textarea id="mermaidInput" class="sol-textarea" rows="12" placeholder="Введіть Mermaid синтаксис...">flowchart TD
+    A([Початок]) --> B[Процес]
+    B --> C{Рішення?}
+    C -->|Так| D[Дія 1]
+    C -->|Ні| E[Дія 2]
+    D --> F([Кінець])
+    E --> F([Кінець])</textarea>
+                </div>
+                <div class="sol-card__footer">
+                    <button id="renderButton" class="sol-btn sol-btn--primary sol-w-full">Згенерувати діаграму</button>
+                </div>
+            </div>
+        </div>
+        <div class="sol-col-md-5">
+            <div class="sol-card">
+                <div class="sol-card__header">Швидкий старт</div>
+                <div class="sol-card__body">
+                    <ul class="sol-list">
+                        <li><code>flowchart TD</code> — блок-схеми зверху вниз</li>
+                        <li><code>sequenceDiagram</code> — діаграми послідовностей</li>
+                        <li><code>gantt</code> — діаграми Ганта</li>
+                        <li><code>classDiagram</code> — UML діаграми класів</li>
+                        <li><code>stateDiagram-v2</code> — діаграми станів</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sol-surface sol-mb-lg">
+        <div class="sol-surface__header">
+            <h2>Результат</h2>
+        </div>
+        <div class="sol-surface__body">
+            <div id="mermaidOutput" class="sol-mermaid-output">Готова діаграма з'явиться тут після генерації.</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.mermaid) {
+                window.mermaid.initialize({ startOnLoad: false, theme: 'default' });
+            }
+
+            const renderButton = document.getElementById('renderButton');
+            const input = document.getElementById('mermaidInput');
+            const output = document.getElementById('mermaidOutput');
+
+            function renderDiagram() {
+                const diagramCode = input.value.trim();
+
+                if (!diagramCode) {
+                    output.innerHTML = '<div class="sol-alert sol-alert--warning">Будь ласка, введіть синтаксис Mermaid для генерації.</div>';
+                    return;
+                }
+
+                try {
+                    const uniqueId = 'mermaid-' + Date.now();
+                    const { svg } = window.mermaid.render(uniqueId, diagramCode);
+                    output.innerHTML = svg;
+                } catch (error) {
+                    output.innerHTML = '<div class="sol-alert sol-alert--error">Помилка рендерингу: ' + error.message + '</div>';
+                }
+            }
+
+            renderButton.addEventListener('click', renderDiagram);
+        });
+    </script>
+{% endblock %}

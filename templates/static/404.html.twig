@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% set page_title = '404 - Сторінку не знайдено' %}
+
+{% block content %}
+    <div class="sol-terminal sol-mb-lg">
+        <span class="sol-prompt text-error">Error 404: Page Not Found</span>
+    </div>
+
+    <article class="sol-surface">
+        <h2>Помилка 404 - Сторінку не знайдено</h2>
+        <div class="post-content">
+            <p>
+                На жаль, сторінка, яку ви шукаєте, не існує або була переміщена.
+                Схоже, ви натрапили на ділянку "невизначеної поведінки".
+            </p>
+            <p>
+                <span class="sol-prompt">cd /</span>
+                <br>
+                Можливо, ви захочете повернутися на <a href="/">головну сторінку</a>.
+            </p>
+            <p>
+                <span class="sol-prompt">ls -l /dev/null</span>
+                <br>
+                Якщо ви вважаєте, що це помилка, будь ласка,
+                <a href="/contact.php">зв'яжіться з адміністратором</a>.
+            </p>
+            <p>
+                <span class="sol-prompt text-warning">exit</span>
+                <br>
+                Дякуємо за розуміння.
+            </p>
+        </div>
+    </article>
+{% endblock %}

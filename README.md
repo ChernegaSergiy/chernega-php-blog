@@ -1,0 +1,147 @@
+# chernega.eu.org Web Stack
+
+[![Better Stack Badge](https://uptime.betterstack.com/status-badges/v1/monitor/255i1.svg)](https://uptime.betterstack.com/?utm_source=status_badge)
+
+This directory contains the full PHP codebase powering **chernega.eu.org**, built around Twig templates. The code base powers a markdown-backed blog with SQLite persistence, auxiliary tools, and a minimalist terminal-inspired UI.
+
+## Key Features
+
+- **Twig templating** with a shared base layout and structured page templates.
+- **SQLite-backed blog engine** with configurable posts-per-page and category filtering.
+- **Markdown authoring pipeline** via Parsedown for safe HTML rendering.
+- **Utility pages** including a Mermaid.js diagram visualiser and CSSM Unlimited License generator.
+- **Structured helper layer** for preview rendering, date localisation (UTC → Europe/Kiev), and template data mapping.
+
+## Requirements
+
+- PHP **7.3.10** (CLI or FPM) with the following extensions:
+  - `sqlite3`
+  - `mbstring`
+  - `json`
+- [Composer](https://getcomposer.org/) (optional but recommended) to install Twig.
+- Write permissions for `data/` and (optionally) `uploads/`.
+
+> **Important:** Twig is not bundled. Install it before serving the site (see [Installing Twig](#installing-twig)).
+
+## Directory Layout
+
+```
+html/
+├── 404.php                # Renders the custom 404 page via Twig
+├── about.php              # Static "About" page controller
+├── bootstrap.php          # Twig environment bootstrap
+├── contact.php            # Static "Contact" page controller
+├── data/                  # SQLite database storage (blog.db)
+├── Database.php           # SQLite data access layer
+├── helpers.php            # Markdown + view-model helpers
+├── index.php              # Homepage controller (recent posts)
+├── mermaid-diagrams.php   # Mermaid.js playground controller
+├── Parsedown.php          # Bundled Markdown parser
+├── post.php               # Post view by numeric ID
+├── post_slug.php          # Post view by slug
+├── posts.php              # Paginated post catalogue + search/filter
+├── templates/             # Twig templates (base, posts, static, tools)
+└── ul-generator.php       # CSSM Unlimited License generator controller
+```
+
+Static assets live under `assets/` (CSS, JS, fonts) and site metadata icons reside alongside the controllers (favicons, manifests, etc.).
+
+## Installing Twig
+
+Twig must be available at runtime. Choose one of the following approaches:
+
+1. **Composer (recommended)**
+   ```bash
+   composer require twig/twig:^3.0
+   ```
+   This creates `vendor/` with the autoloader that `bootstrap.php` consumes automatically.
+
+2. **Manual install (without Composer)**
+   - Download the Twig release archive from <https://github.com/twigphp/Twig/releases>.
+   - Extract it inside `html/vendor/twig/`.
+   - Include Twig's autoloader before `bootstrap.php` (e.g. `require __DIR__ . '/vendor/autoload.php';`).
+
+If Twig classes are still missing at runtime, the bootstrapper throws a descriptive `RuntimeException`.
+
+## Database Initialisation
+
+On first run the application will:
+
+- Create `data/blog.db` if it does not exist.
+- Provision the `admins`, `posts`, and `settings` tables.
+- Seed default settings (`~/chernega.blog`, `posts_per_page=5`).
+
+You can pre-populate posts via your own script or by calling `$db->addPost(...)` within `Database.php`.
+
+## Running the Application
+
+Use PHP's built-in server from the `html/` directory:
+```bash
+php -S 127.0.0.1:8000 -t .
+```
+
+Then open <http://127.0.0.1:8000/> in your browser. Frequently used entry points:
+
+- `/` – homepage with the most recent posts.
+- `/posts.php` – full archive with pagination, category filter, and search.
+- `/post.php?id=123` – view post by numeric ID.
+- `/{slug}` – view post by slug (via `post_slug.php`).
+- `/about.php`, `/contact.php` – static pages.
+- `/mermaid-diagrams.php` – Mermaid.js live editor.
+- `/ul-generator.php` – CSSM UL v2.0 license generator.
+
+To serve behind Apache/Nginx, configure the document root to this `html/` directory and route unknown slugs to `post_slug.php`.
+
+## Twig Templates
+
+`templates/` is organised by feature:
+
+- `base.html.twig` – shared layout, navigation, and footer.
+- `home.html.twig` – homepage (recent posts).
+- `posts/index.html.twig` – list view + pagination.
+- `posts/show.html.twig` – single post view (metadata aware).
+- `static/` – simple static pages (`about`, `contact`, `404`).
+- `tools/` – interactive utilities (`mermaid`, `license-generator`).
+
+Modify the navigation or footer once in `base.html.twig`. Controller PHP files convert database rows into view models via helper functions, ensuring templates stay presentation-focused.
+
+## Helper Utilities
+
+`helpers.php` provides reusable functions:
+
+- `markdownParser()` – returns a cached, safe-mode `Parsedown` instance.
+- `generatePreviewHtml()` – builds 200-char excerpts for lists.
+- `formatDateToKiev()` – converts UTC timestamps to `Europe/Kiev` dates.
+- `mapPostForList()` and `mapPostForDetails()` – prepare associative arrays consumed by Twig.
+
+`bootstrap.php` centralises Twig setup, sets global site metadata (`site.title`, navigation items, footer), and handles lazy Composer autoloading.
+
+## Assets & Frontend
+
+All styling relies on `assets/css/main.css` (Solarized terminal aesthetic). JavaScript is used sparingly:
+- Mermaid visualiser loads the CDN bundle.
+- License generator embeds a small inline script for form handling.
+- No build pipeline is required; everything is vanilla CSS/JS.
+
+## Development Workflow
+
+1. Ensure PHP 7.3+ and SQLite extensions are available.
+2. Install Twig (see [Installing Twig](#installing-twig)).
+3. Start the local server (`php -S`).
+4. Edit Twig templates or controllers; refresh the browser to see changes.
+5. Optional: enable Twig caching by adjusting the `$twig` environment options in `bootstrap.php` once a writable cache directory is configured.
+
+## Troubleshooting
+
+- **`RuntimeException: Twig dependency not found`** — Twig not installed or autoloader missing. Install via Composer or require Twig's autoloader manually.
+- **Blank page / HTTP 500** — PHP error. Run `php -l <file>` or enable `display_errors` in `php.ini` during development.
+- **Posts missing on homepage** — Empty `posts` table. Add records via admin tooling or direct SQL.
+- **Incorrect dates** — Server timezone not UTC. Ensure timestamps stored as UTC; helper converts to `Europe/Kiev`.
+- **404 for `/some-slug`** — Slug absent or conflicts with protected filenames. Confirm slug exists and is not blacklisted in `post_slug.php`.
+
+## Next Steps
+
+- Integrate an admin UI for post management.
+- Add Twig caching once deployed to production.
+- Extend validation/escaping rules as the content model grows.
+- Adapt this stack to other hosting environments as long as PHP 7.3, SQLite, and Twig are available.

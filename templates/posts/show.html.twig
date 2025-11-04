@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% set page_title = post.title %}
+{% set meta_description = post.meta_description %}
+{% set canonical_url = post.canonical_url %}
+
+{% block meta %}
+    <meta property="og:title" content="{{ post.meta_title }}">
+    <meta property="og:description" content="{{ post.meta_description }}">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ post.canonical_url }}">
+    {% if post.article_image %}
+        <meta property="og:image" content="{{ post.article_image }}">
+    {% endif %}
+    <meta property="og:site_name" content="{{ site.title }}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ post.meta_title }}">
+    <meta name="twitter:description" content="{{ post.meta_description }}">
+    {% if post.article_image %}
+        <meta name="twitter:image" content="{{ post.article_image }}">
+    {% endif %}
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ post.canonical_url }}"
+      },
+      "headline": "{{ post.meta_title|e('js') }}",
+      "description": "{{ post.meta_description|e('js') }}",
+      {% if post.article_image %}
+      "image": {
+        "@type": "ImageObject",
+        "url": "{{ post.article_image }}",
+        "width": 1280,
+        "height": 640
+      },
+      {% endif %}
+      "datePublished": "{{ post.date_published }}",
+      "dateModified": "{{ post.date_modified }}",
+      "author": {
+        "@type": "Person",
+        "name": "Сергій Чернега"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "{{ site.title }}",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://chernega.eu.org/logo.png",
+          "width": 600,
+          "height": 600
+        }
+      }
+    }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="sol-terminal sol-mb-lg">
+        <span class="sol-prompt">blog view {{ post.debug_command }}</span>
+    </div>
+
+    <article class="sol-surface">
+        {% if false and post.article_image %}
+            <img src="{{ post.article_image }}" alt="{{ post.title }}" class="sol-w-full sol-mb-md">
+        {% endif %}
+
+        <div class="sol-mb-md">
+            <h2>{{ post.title }}</h2>
+            <div class="text-sm text-muted">
+                <span>{{ post.date }}</span> |
+                <span>category: <a href="{{ post.category_url }}">{{ post.category }}</a></span>
+            </div>
+        </div>
+
+        <div class="post-content">
+            {{ post.content_html|raw }}
+        </div>
+    </article>
+
+    <div class="sol-text-center sol-mt-lg">
+        <a href="/posts.php" class="sol-btn sol-btn--secondary sol-btn--outline">Повернутися до всіх постів</a>
+    </div>
+{% endblock %}

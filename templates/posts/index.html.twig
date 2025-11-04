@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <form class="sol-form-group sol-flex sol-flex--start sol-mb-lg" method="get" action="/posts.php">
+        <input type="text" name="search" id="search" placeholder="Пошук постів..." value="{{ search_query }}" class="sol-input">
+        <button type="submit" class="sol-btn sol-btn--primary">Пошук</button>
+    </form>
+
+    <div class="sol-terminal sol-mb-lg">
+        <span class="sol-prompt">blog {{ command_display }}</span>
+    </div>
+
+    {% if categories is not empty and category_filter %}
+        <div class="sol-surface sol-mb-lg sol-surface--inline-content">
+            <span class="text-accent text-bold">Categories:</span>
+            {% for category in categories %}
+                <a href="{{ category.url }}" class="{{ category.is_active ? 'category-link--active' : '' }}">{{ category.label }}</a>{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if posts is empty %}
+        <div class="sol-terminal">
+            <span class="sol-prompt">echo "Постів не знайдено"</span>
+        </div>
+    {% else %}
+        {% for post in posts %}
+            <article class="sol-card sol-card--interactive" onclick="window.location.href='{{ post.url }}';">
+                <div class="sol-card__header">
+                    <a href="{{ post.url }}">
+                        {{ post.title }}
+                    </a>
+                </div>
+                <div class="sol-card__body">
+                    <p>{{ post.preview_html|raw }}</p>
+                </div>
+                <div class="sol-card__footer text-sm text-muted">
+                    <span>{{ post.date }}</span> |
+                    <span>category: <a href="{{ post.category_url }}">{{ post.category }}</a></span>
+                </div>
+            </article>
+        {% endfor %}
+
+        {% if pagination %}
+            <nav aria-label="Post navigation">
+                <ul class="sol-pagination">
+                    <li class="sol-pagination__item">
+                        {% if pagination.previous %}
+                            <a href="{{ pagination.previous.url }}" class="sol-pagination__link">Previous</a>
+                        {% else %}
+                            <span class="sol-pagination__link sol-pagination__link--disabled">Previous</span>
+                        {% endif %}
+                    </li>
+
+                    {% for page in pagination.pages %}
+                        <li class="sol-pagination__item">
+                            <a href="{{ page.url }}" class="sol-pagination__link {{ page.is_current ? 'sol-pagination__link--active' : '' }}">{{ page.label }}</a>
+                        </li>
+                    {% endfor %}
+
+                    <li class="sol-pagination__item">
+                        {% if pagination.next %}
+                            <a href="{{ pagination.next.url }}" class="sol-pagination__link">Next</a>
+                        {% else %}
+                            <span class="sol-pagination__link sol-pagination__link--disabled">Next</span>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        {% endif %}
+    {% endif %}
+{% endblock %}

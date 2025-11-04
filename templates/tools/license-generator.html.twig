@@ -1,0 +1,331 @@
+{% extends 'base.html.twig' %}
+
+{% set page_title = 'Офіційний генератор CSSM Unlimited License v2.0' %}
+
+{% block header %}
+    <span class="site-header__title">Офіційний генератор CSSM Unlimited License v2.0</span>
+{% endblock %}
+
+{% block content %}
+    <div class="sol-alert sol-alert--info sol-mb-lg">
+        <strong>Юридичне повідомлення:</strong> Цей інструмент генерує офіційний текст ліцензії CSSM UL v2.0. Для юридичної чинності достатньо включити текст у файл LICENSE у корені проєкту. Дата створення ліцензії фіксується автоматично.
+    </div>
+
+    <div class="sol-card sol-mb-lg">
+        <form class="sol-card__body" id="licenseForm">
+            <div class="sol-form-group">
+                <label for="year" class="sol-label">Рік авторських прав (YYYY)</label>
+                <input type="text" id="year" pattern="\\d{4}" title="Введіть 4 цифри року" required value="{{ current_year }}" class="sol-input">
+            </div>
+            <div class="sol-form-group">
+                <label for="holder" class="sol-label">Повне ім'я або назва організації (правовласник)</label>
+                <input type="text" id="holder" required value="{{ default_holder }}" class="sol-input">
+            </div>
+            <button type="submit" class="sol-btn sol-btn--primary sol-w-full">Згенерувати офіційну ліцензію</button>
+        </form>
+    </div>
+
+    <div id="licenseOutput" title="Натисніть, щоб скопіювати ліцензію" class="sol-terminal" style="white-space: pre-wrap; word-wrap: break-word; cursor: pointer;"></div>
+
+    <script>
+        function generateLicense(event) {
+            event.preventDefault();
+
+            const yearInput = document.getElementById('year');
+            const holderInput = document.getElementById('holder');
+            const licenseOutputDiv = document.getElementById('licenseOutput');
+
+            if (!yearInput.checkValidity()) {
+                alert('Будь ласка, введіть коректний рік (4 цифри)');
+                yearInput.focus();
+                return;
+            }
+
+            if (!holderInput.value.trim()) {
+                alert('Будь ласка, вкажіть правовласника');
+                holderInput.focus();
+                return;
+            }
+
+            const year = yearInput.value;
+            const holder = holderInput.value.trim();
+            const generationDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            const licenseHeader = `CSSM Unlimited License Version 2.0
+Copyright (c) ${year} ${holder}
+
+This is an official copy of the CSSM Unlimited License Version 2.0
+Generated on ${generationDate} by the official license generator
+
+--------------------------------------------------------------------`;
+
+            const licenseBody = `Software License 
+Agreement
+
+Introduction
+
+This license ("License") governs the use, modification, and 
+distribution of software provided by the Author 
+("Author"). By using this software, you ("User") agree 
+to the terms of this License. If you do not agree to 
+the terms of this License, you are not permitted to use, 
+modify, or distribute the Software.
+
+The license is provided free of charge, and you have the 
+right to use it according to the specified terms. The 
+Author reserves the right to make changes to this License 
+at any time, and these changes will take effect upon their 
+publication. Your continued use of the Software after 
+changes are made will be considered acceptance of the new 
+License terms.
+
+This License is a legally binding agreement between the 
+User and the Author. All terms used in this License have 
+the meanings defined in this document unless otherwise 
+specified.
+
+1. Definitions
+
+1.1. Software refers to any software provided by the 
+Author, including but not limited to source code, object 
+code, documentation, graphic elements, and any accompanying 
+materials that accompany this software. All components of 
+the Software are part of this License.
+
+1.2. Modification refers to any change, addition, or 
+adaptation of the Software, including but not limited to 
+changes in source code, functionality, interface, 
+documentation, or any other elements that comprise the 
+Software. Modification may include bug fixes, performance 
+improvements, or addition of new features.
+
+1.3. User refers to any natural or legal person who 
+accesses and uses the Software in accordance with the terms 
+of this License. The User may act on their own behalf or 
+on behalf of a company, organization, or other legal 
+entity.
+
+1.4. Documentation refers to any materials accompanying the 
+Software that contain information about its use, 
+configuration, functionality, and other aspects that help 
+the User understand how the Software works.
+
+1.5. Derivative Works refers to any new works created based 
+on the Software, including but not limited to 
+modifications, adaptations, translations, compilations, and 
+other forms that alter the original Software.
+
+1.6. License Terms refers to all conditions contained in 
+this License that govern the rights and obligations of the 
+parties, as well as rules for using, modifying, and 
+distributing the Software.
+
+2. Rights and Obligations of the Author
+
+2.1. The Author retains all rights to the authorship of 
+the Software, including but not limited to all 
+intellectual property rights, patents, trademarks, and 
+copyrights. The Author has the right to modify, update, or 
+revoke the Software License at any time.
+
+2.2. The Author is not liable for any damages arising from 
+the use or inability to use the Software. This includes, 
+but is not limited to, direct, indirect, incidental, 
+special, or consequential damages that may arise from 
+using the Software.
+
+2.3. The Author has the right to make changes to the 
+Software, including but not limited to updates, bug fixes, 
+functionality improvements, or adding new features. The 
+information in documentation and on the program screen.
+
+- Notification: Report any discovered errors or problems 
+that may arise during Software use. Users should attempt to 
+contact the Author to provide feedback that may help 
+improve the Software.
+
+- Compliance: Comply with all terms of this License, 
+including but not limited to authorship, distribution, and 
+modification terms.
+
+3.3. Users must comply with all applicable laws and 
+regulations when using the Software. This includes, but is 
+not limited to, compliance with copyright laws, patents, 
+trademark, and other intellectual property rights.
+
+3.4. Users are responsible for maintaining the 
+confidentiality of their account credentials and 
+information related to Software access, and must 
+immediately notify the Author of any unauthorized access or 
+use of their credentials.
+
+4. Distribution Terms
+
+4.1. Any distribution of the Software, whether in original 
+or modified form, must be accompanied by a copy of this 
+License. This ensures that all new users receive the same 
+rights and obligations defined in this License.
+
+4.2. Modified versions of the Software must be licensed 
+under the same terms as the original Software. This means 
+any changes made to the Software must remain open for 
+further use and modification by other Users.
+
+4.3. Users who distribute modified versions must clearly 
+indicate what changes were made and provide information on 
+how to contact them for additional information about the 
+modifications.
+
+4.4. Users must comply with all distribution-related terms, 
+including but not limited to attribution requirements, 
+inclusion of License copy, and compliance with authorship 
+terms.
+
+4.5. When distributing the Software through online 
+platforms, Users must ensure that all links to the License 
+and terms of use are accessible to new users.
+
+4.6. Users must comply with all rules and regulations 
+regarding software distribution in their jurisdiction, 
+including but not limited to licensing and reporting 
+requirements.
+
+5. Disclaimer of Liability
+
+5.1. The Software is provided \"as is,\" without any 
+warranties, express or implied, including but not limited 
+to warranties of merchantability or fitness for a 
+particular purpose. The Author does not guarantee that the 
+Software will be error-free, uninterrupted, or meet all 
+User requirements.
+
+5.2. The Author is not liable for any damages arising from 
+the use or inability to use the Software, including but 
+not limited to loss of data, profit, or other material or 
+immaterial damages. Users must understand the risks 
+associated with using the Software and accept them.
+
+5.3. Users must understand that using the Software may lead 
+to unpredictable consequences, and they are responsible 
+for any actions that may arise from using the Software. 
+The Author is not liable for any consequences arising from 
+the use or misuse of the Software.
+
+5.4. In the event of any claims related to Software use, 
+Users are obligated to indemnify the Author and compensate 
+for all costs associated with such claims.
+
+5.5. Users must understand that using the Software may 
+involve risks such as data loss or system failures, and 
+they should take appropriate measures to protect their data 
+and systems.
+
+6. License Termination
+
+6.1. In case of violation of any terms of this License, 
+the license automatically terminates, and the User loses 
+all rights to use the Software. This includes, but is not 
+limited to, cases where the User does not comply with 
+authorship or distribution terms.
+
+6.2. Users may restore their rights provided they correct 
+the violation before the Author discovers it. Rights 
+restoration may require confirmation that the User has 
+resolved all violations and complies with License terms.
+
+6.3. The Author reserves the right to verify compliance 
+with this License's terms at any time and take appropriate 
+action in case of violations.
+
+6.4. Upon License termination, the User must immediately 
+cease using the Software and delete all copies from all 
+their devices.
+
+6.5. License termination does not release the User from 
+liability for License violations that occurred before 
+termination.
+
+6.6. Users must confirm they have removed all Software 
+copies from all devices upon License termination.
+
+6.7. The Author has the right to compensation for damages 
+in case of User violation of this License's terms.
+
+7. Changes to License
+
+7.1. The Author reserves the right to make changes or 
+updates to this License. Users will be notified of any 
+changes, and continued use of the Software after changes 
+will be considered acceptance of the new License terms. 
+Changes may include clarification of terms, new 
+requirements, or changes in Users' rights and obligations.
+
+7.2. All License changes will be published on the Author's 
+official website or in Software documentation. Users are 
+responsible for regularly reviewing License updates.
+
+7.3. If a User does not agree with new License terms, they 
+must cease using the Software and delete all copies from 
+all their devices.
+
+7.4. When making License changes, the Author commits to 
+providing Users sufficient time to review new terms before 
+changes take effect.
+
+7.5. Users may contact the Author with questions or for 
+clarification about new License terms if such arise.
+
+7.6. In case of substantial License changes, the Author 
+may provide Users the opportunity to express their 
+comments or suggestions regarding new terms.
+
+7.7. Users should be prepared for possible changes in 
+Software functionality due to License updates.`;
+
+            const licenseFooter = `--------------------------------------------------------------------
+END OF CSSM UNLIMITED LICENSE VERSION 2.0
+
+By using this software, you acknowledge that you have read this 
+license, understand it, and agree to be bound by its terms and 
+conditions.`;
+
+            const fullLicense = `${licenseHeader}\n\n${licenseBody}\n\n${licenseFooter}`;
+            licenseOutputDiv.textContent = fullLicense;
+        }
+
+        function copyToClipboard() {
+            const licenseText = document.getElementById('licenseOutput').textContent;
+            if (!licenseText.trim()) {
+                alert('Спочатку згенеруйте ліцензію');
+                return;
+            }
+
+            navigator.clipboard.writeText(licenseText).then(() => {
+                alert('Ліцензію скопійовано в буфер обміну. Рекомендується зберегти її у файл LICENSE у корені проєкту.');
+            }).catch(err => {
+                console.error('Помилка копіювання: ', err);
+                alert('Не вдалося скопіювати. Спробуйте вручну виділити текст.');
+            });
+        }
+
+        window.onload = function() {
+            document.getElementById('year').value = new Date().getFullYear();
+            generateLicense(new Event('load'));
+
+            const licenseForm = document.getElementById('licenseForm');
+            if (licenseForm) {
+                licenseForm.addEventListener('submit', generateLicense);
+            }
+
+            const licenseOutputDiv = document.getElementById('licenseOutput');
+            if (licenseOutputDiv) {
+                licenseOutputDiv.addEventListener('click', copyToClipboard);
+            }
+        };
+    </script>
+{% endblock %}
+*** End Patch
