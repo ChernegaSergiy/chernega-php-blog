@@ -26,11 +26,13 @@ if ('POST' === $_SERVER['REQUEST_METHOD']) {
             $admin = $db->getAdminByUsername($username);
             if ($admin && password_verify($password, $admin['password'])) {
                 loginAdmin($admin);
+                adminAudit('login_success', null, null, ['username' => $username]);
                 adminFlash('success', 'Signed in successfully.');
                 header('Location: /admin/');
                 exit;
             }
 
+            adminAudit('login_failed', null, null, ['username' => $username]);
             $error = 'Invalid credentials provided.';
         }
     }

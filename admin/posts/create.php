@@ -4,6 +4,7 @@ require_once __DIR__ . '/../auth.php';
 require_once __DIR__ . '/../../helpers.php';
 
 requireAdminAuth();
+requireAdminRole('editor');
 
 $db = getAdminDatabase();
 $postData = emptyPostFormData();
@@ -15,7 +16,7 @@ if ('POST' === $_SERVER['REQUEST_METHOD']) {
     } else {
         [$validated, $errors] = validatePostInput($_POST);
         if (empty($errors)) {
-            $created = $db->addPost(
+            $postId = $db->addPost(
                 $validated['title'],
                 $validated['category'],
                 $validated['content'],
@@ -25,12 +26,14 @@ if ('POST' === $_SERVER['REQUEST_METHOD']) {
                 $validated['meta_description'] ?: null
             );
 
-            if ($created) {
+            if ($postId) {
+                adminAudit('post_created', 'post', (int) $postId, ['title' => $validated['title']]);
                 adminFlash('success', 'Post created successfully.');
                 header('Location: /admin/');
                 exit;
             }
 
+            adminAudit('post_create_failed', 'post', null, ['error' => $db->getLastError(), 'title' => $validated['title']]);
             $errors[] = 'Failed to create post: ' . $db->getLastError();
         }
 
@@ -47,4 +50,5 @@ echo twig()->render('admin/post_form.html.twig', [
     'errors' => $errors,
     'nav_active' => 'create',
     'csrf_token' => $csrfToken,
+    'current_admin' => adminAuth(),
 ]);

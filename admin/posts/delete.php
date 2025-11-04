@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../auth.php';
 
 requireAdminAuth();
+requireAdminRole('admin');
 
 if ('POST' !== $_SERVER['REQUEST_METHOD']) {
     header('Location: /admin/');
@@ -25,8 +26,10 @@ if ($postId <= 0) {
 $db = getAdminDatabase();
 
 if ($db->deletePost($postId)) {
+    adminAudit('post_deleted', 'post', $postId);
     adminFlash('success', 'Post deleted successfully.');
 } else {
+    adminAudit('post_delete_failed', 'post', $postId, ['error' => $db->getLastError()]);
     adminFlash('error', 'Failed to delete post: ' . $db->getLastError());
 }
 

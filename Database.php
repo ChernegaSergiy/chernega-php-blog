@@ -9,6 +9,8 @@ class Database
 
     private $last_error;
 
+    private $allowed_admin_roles = ['viewer', 'editor', 'admin'];
+
     /**
      * Constructor - initializes database connection and creates tables
      */
@@ -188,12 +190,82 @@ class Database
         return $row ?: null;
     }
 
+    public function getAdminById(int $id)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM admins WHERE id = :id LIMIT 1');
+        $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+
+        $row = $result->fetchArray(SQLITE3_ASSOC);
+
+        return $row ?: null;
+    }
+
+    public function getAdmins(): array
+    {
+        $rows = [];
+        $result = $this->db->query('SELECT id, username, role, created_at FROM admins ORDER BY username ASC');
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    public function updateAdminRole(int $adminId, string $role): bool
+    {
+        $role = strtolower($role);
+        if (! in_array($role, $this->allowed_admin_roles, true)) {
+            return false;
+        }
+
+        $stmt = $this->db->prepare('UPDATE admins SET role = :role WHERE id = :id');
+        $stmt->bindValue(':role', $role, SQLITE3_TEXT);
+        $stmt->bindValue(':id', $adminId, SQLITE3_INTEGER);
+
+        return (bool) $stmt->execute();
+    }
+
+    public function getAllowedAdminRoles(): array
+    {
+        return $this->allowed_admin_roles;
+    }
+
+    public function logAudit(?int $adminId, string $action, ?string $entityType = null, ?int $entityId = null, array $metadata = [], ?string $ipAddress = null): void
+    {
+        $stmt = $this->db->prepare('INSERT INTO audit_logs (admin_id, action, entity_type, entity_id, metadata, ip_address) VALUES (:admin_id, :action, :entity_type, :entity_id, :metadata, :ip_address)');
+        if (null === $adminId) {
+            $stmt->bindValue(':admin_id', null, SQLITE3_NULL);
+        } else {
+            $stmt->bindValue(':admin_id', $adminId, SQLITE3_INTEGER);
+        }
+        $stmt->bindValue(':action', $action, SQLITE3_TEXT);
+        $stmt->bindValue(':entity_type', $entityType, SQLITE3_TEXT);
+        if (null === $entityId) {
+            $stmt->bindValue(':entity_id', null, SQLITE3_NULL);
+        } else {
+            $stmt->bindValue(':entity_id', $entityId, SQLITE3_INTEGER);
+        }
+        $stmt->bindValue(':metadata', json_encode($metadata, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), SQLITE3_TEXT);
+        $stmt->bindValue(':ip_address', $ipAddress, SQLITE3_TEXT);
+        $stmt->execute();
+    }
+
+    public function getRecentAuditLogs(int $limit = 50): array
+    {
+        $limit = max(1, min($limit, 200));
+        $stmt = $this->db->prepare('SELECT audit_logs.*, admins.username FROM audit_logs LEFT JOIN admins ON audit_logs.admin_id = admins.id ORDER BY audit_logs.created_at DESC LIMIT :limit');
+        $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+
+        return $this->fetchAll($result);
+    }
     /**
      * Saves blog settings to database
      *
      * @param  string  $blog_title  The blog title
      * @param  int  $posts_per_page  Number of posts per page
-     * @return bool True on success, false on failure
+     * @return int|false Inserted post ID on success, false on failure
      */
     public function saveBlogSettings($blog_title, $posts_per_page)
     {
@@ -392,7 +464,7 @@ class Database
      * @param  string|null  $slug  Custom slug (optional)
      * @param  string|null  $meta_title  Custom meta title (optional)
      * @param  string|null  $meta_description  Custom meta description (optional)
-     * @return bool True on success, false on failure
+     * @return int|false Inserted post ID on success, false on failure
      */
     public function addPost($title, $category, $content, $article_image = null, $slug = null, $meta_title = null, $meta_description = null)
     {
@@ -421,7 +493,7 @@ class Database
             return false;
         }
 
-        return true;
+        return (int) $this->db->lastInsertRowID();
     }
 
     /**
@@ -436,7 +508,7 @@ class Database
      * @param  string|null  $slug  Custom slug (optional)
      * @param  string|null  $meta_title  Custom meta title (optional)
      * @param  string|null  $meta_description  Custom meta description (optional)
-     * @return bool True on success, false on failure
+     * @return int|false Inserted post ID on success, false on failure
      */
     public function updatePost($id, $title, $category, $content, $created_at, $article_image = null, $slug = null, $meta_title = null, $meta_description = null)
     {
@@ -486,7 +558,7 @@ class Database
      * Deletes a post
      *
      * @param  int  $id  Post ID to delete
-     * @return bool True on success, false on failure
+     * @return int|false Inserted post ID on success, false on failure
      */
     public function deletePost($id)
     {
@@ -499,7 +571,7 @@ class Database
             return false;
         }
 
-        return true;
+        return (int) $this->db->lastInsertRowID();
     }
 
     /**
@@ -689,7 +761,7 @@ class Database
      *
      * @param  string  $username  Admin username
      * @param  string  $password  Admin password
-     * @return bool True on success, false on failure
+     * @return int|false Inserted post ID on success, false on failure
      */
     public function addAdmin($username, $password)
     {
@@ -704,7 +776,7 @@ class Database
             return false;
         }
 
-        return true;
+        return (int) $this->db->lastInsertRowID();
     }
 
     /**

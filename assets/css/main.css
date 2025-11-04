@@ -684,6 +684,11 @@ h6::before { content: "###### "; }
     color: var(--color-surface-elevated);
 }
 
+.sol-table--compact th,
+.sol-table--compact td {
+    padding: calc(var(--space-sm) / 2);
+}
+
 /* ==========================================================================
    COMPONENT: LISTS
    ========================================================================== */
@@ -1083,6 +1088,12 @@ ul, ol {
 .site-header__nav-link--active {
     color: var(--color-primary);
     text-decoration: underline;
+}
+
+.site-header__nav-user {
+    margin-left: var(--space-sm);
+    color: var(--base01);
+    opacity: 0.8;
 }
 
 .sol-text-upper { text-transform: uppercase; }

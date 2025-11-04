@@ -25,11 +25,60 @@ function isAdminAuthenticated(): bool
 function requireAdminAuth(): void
 {
     if (! isAdminAuthenticated()) {
+        adminFlash('error', 'Please sign in to continue.');
         header('Location: /admin/login.php');
         exit;
     }
 }
 
+function adminRole(): string
+{
+    $admin = adminAuth();
+
+    return $admin['role'] ?? 'viewer';
+}
+
+function adminRoleHierarchy(): array
+{
+    return [
+        'viewer' => 10,
+        'editor' => 20,
+        'admin' => 30,
+    ];
+}
+
+function adminHasRole(string $requiredRole): bool
+{
+    $hierarchy = adminRoleHierarchy();
+    $current = adminRole();
+    if (! isset($hierarchy[$requiredRole])) {
+        return false;
+    }
+
+    $currentValue = $hierarchy[$current] ?? 0;
+    $requiredValue = $hierarchy[$requiredRole];
+
+    return $currentValue >= $requiredValue;
+}
+
+function requireAdminRole(string $requiredRole): void
+{
+    if (! adminHasRole($requiredRole)) {
+        adminFlash('error', 'You do not have permission to perform this action.');
+        header('Location: /admin/');
+        exit;
+    }
+}
+
+function adminAudit(string $action, ?string $entityType = null, ?int $entityId = null, array $metadata = []): void
+{
+    $db = getAdminDatabase();
+    $admin = adminAuth();
+    $adminId = $admin['id'] ?? null;
+    $ipAddress = $_SERVER['REMOTE_ADDR'] ?? null;
+
+    $db->logAudit($adminId, $action, $entityType, $entityId, $metadata, $ipAddress);
+}
 function loginAdmin(array $admin): void
 {
     adminSessionStart();
@@ -37,12 +86,18 @@ function loginAdmin(array $admin): void
     $_SESSION['admin'] = [
         'id' => (int) $admin['id'],
         'username' => $admin['username'],
+        'role' => $admin['role'] ?? 'editor',
     ];
 }
 
 function logoutAdmin(): void
 {
     adminSessionStart();
+    $admin = adminAuth();
+    if (! empty($admin)) {
+        adminAudit('logout', null, null, ['username' => $admin['username'] ?? '']);
+    }
+
     $_SESSION = [];
     if (ini_get('session.use_cookies')) {
         $params = session_get_cookie_params();

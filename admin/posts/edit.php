@@ -4,6 +4,7 @@ require_once __DIR__ . '/../auth.php';
 require_once __DIR__ . '/../../helpers.php';
 
 requireAdminAuth();
+requireAdminRole('editor');
 
 $db = getAdminDatabase();
 $postId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
@@ -37,11 +38,13 @@ if ('POST' === $_SERVER['REQUEST_METHOD']) {
             );
 
             if ($updated) {
+                adminAudit('post_updated', 'post', $postId, ['title' => $validated['title'] ?: $currentPost['title']]);
                 adminFlash('success', 'Post updated successfully.');
                 header('Location: /admin/');
                 exit;
             }
 
+            adminAudit('post_update_failed', 'post', $postId, ['error' => $db->getLastError()]);
             $errors[] = 'Failed to update post: ' . $db->getLastError();
         }
 
@@ -64,4 +67,5 @@ echo twig()->render('admin/post_form.html.twig', [
     'errors' => $errors,
     'nav_active' => 'dashboard',
     'csrf_token' => $csrfToken,
+    'current_admin' => adminAuth(),
 ]);

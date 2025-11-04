@@ -1,11 +1,18 @@
 {% extends 'base.html.twig' %}
 
+{% set current_role = current_admin.role|default('viewer') %}
+{% set can_edit_content = current_role in ['editor', 'admin'] %}
+{% set is_super_admin = current_role == 'admin' %}
+
 {% block header %}
     <a href="/admin/" class="site-header__title">~/chernega.blog :: admin</a>
     <nav class="site-header__nav">
         <a href="/admin/" class="site-header__nav-link {{ admin_nav_active == 'dashboard' ? 'site-header__nav-link--active' : '' }}">dashboard</a>
-        <a href="/admin/posts/create.php" class="site-header__nav-link {{ admin_nav_active == 'create' ? 'site-header__nav-link--active' : '' }}">create</a>
+        {% if can_edit_content %}
+            <a href="/admin/posts/create.php" class="site-header__nav-link {{ admin_nav_active == 'create' ? 'site-header__nav-link--active' : '' }}">create</a>
+        {% endif %}
         <a href="/" class="site-header__nav-link" target="_blank" rel="noopener">view site</a>
+        <span class="site-header__nav-user">{{ current_admin.username|default('guest') }} · {{ current_role }}</span>
         <a href="/admin/logout.php" class="site-header__nav-link">logout</a>
     </nav>
 {% endblock %}
