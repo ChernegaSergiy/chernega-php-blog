@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    <a href="/admin/" class="site-header__title">~/chernega.blog :: admin</a>
+    <nav class="site-header__nav">
+        <a href="/admin/" class="site-header__nav-link {{ admin_nav_active == 'dashboard' ? 'site-header__nav-link--active' : '' }}">dashboard</a>
+        <a href="/admin/posts/create.php" class="site-header__nav-link {{ admin_nav_active == 'create' ? 'site-header__nav-link--active' : '' }}">create</a>
+        <a href="/" class="site-header__nav-link" target="_blank" rel="noopener">view site</a>
+        <a href="/admin/logout.php" class="site-header__nav-link">logout</a>
+    </nav>
+{% endblock %}
+
+{% block content %}{% endblock %}

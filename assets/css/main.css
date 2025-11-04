@@ -1076,6 +1076,15 @@ ul, ol {
 .sol-text-right { text-align: right; }
 .sol-text-left { text-align: left; }
 
+.sol-max-w-lg { max-width: 720px; }
+
+.inline-form { display: inline; }
+
+.site-header__nav-link--active {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
 .sol-text-upper { text-transform: uppercase; }
 .sol-text-bold { font-weight: bold; }
 

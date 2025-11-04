@@ -7,6 +7,7 @@ This directory contains the full PHP codebase powering **chernega.eu.org**, buil
 ## Key Features
 
 - **Twig templating** with a shared base layout and structured page templates.
+- **Admin panel** for creating, updating, and deleting posts through a secure dashboard.
 - **SQLite-backed blog engine** with configurable posts-per-page and category filtering.
 - **Markdown authoring pipeline** via Parsedown for safe HTML rendering.
 - **Utility pages** including a Mermaid.js diagram visualiser and CSSM Unlimited License generator.
@@ -63,6 +64,17 @@ Twig must be available at runtime. Choose one of the following approaches:
 
 If Twig classes are still missing at runtime, the bootstrapper throws a descriptive `RuntimeException`.
 
+## Configuration
+
+Runtime options are stored in `config/app.php` and can be overridden via environment variables:
+
+- `APP_ENV` (defaults to `development`) controls features such as Twig caching, which switches on automatically for `production`.
+- `APP_URL` sets the canonical base URL used for generated links and metadata.
+- `ADMIN_USERNAME` and `ADMIN_PASSWORD` seed the initial administrator account (fallback credentials are `admin` / `admin123`).
+- `ADMIN_PASSWORD_HASH` lets you provide a pre-generated password hash if you prefer not to expose a plain password.
+
+Twig cache files live in `cache/twig`; the directory is created automatically when caching is enabled.
+
 ## Database Initialisation
 
 On first run the application will:
@@ -89,8 +101,16 @@ Then open <http://127.0.0.1:8000/> in your browser. Frequently used entry points
 - `/about.php`, `/contact.php` – static pages.
 - `/mermaid-diagrams.php` – Mermaid.js live editor.
 - `/ul-generator.php` – CSSM UL v2.0 license generator.
+- `/admin/` – administrative dashboard (requires authentication).
 
 To serve behind Apache/Nginx, configure the document root to this `html/` directory and route unknown slugs to `post_slug.php`.
+
+## Admin Panel
+
+- Sign in at `/admin/login.php` using the credentials from `config/app.php` or the corresponding environment variables (defaults: `admin` / `admin123`).
+- After authentication you can create, edit, and delete posts; every action is CSRF-protected and validated before data is persisted.
+- Supply an `ADMIN_PASSWORD_HASH` environment variable to distribute a pre-hashed credential. Generate hashes with `password_hash('your-password', PASSWORD_DEFAULT)` in PHP.
+- Use `/admin/logout.php` to terminate the session; PHP's native session handler stores the session on the server.
 
 ## Twig Templates
 
@@ -139,9 +159,9 @@ All styling relies on `assets/css/main.css` (Solarized terminal aesthetic). Java
 - **Incorrect dates** — Server timezone not UTC. Ensure timestamps stored as UTC; helper converts to `Europe/Kiev`.
 - **404 for `/some-slug`** — Slug absent or conflicts with protected filenames. Confirm slug exists and is not blacklisted in `post_slug.php`.
 
-## Next Steps
+## Future Ideas
 
-- Integrate an admin UI for post management.
-- Add Twig caching once deployed to production.
-- Extend validation/escaping rules as the content model grows.
-- Adapt this stack to other hosting environments as long as PHP 7.3, SQLite, and Twig are available.
+- Introduce role-based permissions and audit logging for administrators.
+- Add media uploads with automated image optimisation and storage housekeeping.
+- Automate testing (PHPUnit) and linting within a CI pipeline.
+- Provide API endpoints (REST/JSON) for headless or mobile clients.

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    <a href="/" class="site-header__title">~/chernega.blog</a>
+    <nav class="site-header__nav">
+        <a href="/" class="site-header__nav-link">view site</a>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="sol-container sol-max-w-lg">
+        <div class="sol-terminal sol-mb-lg">
+            <span class="sol-prompt">admin login</span>
+        </div>
+
+        {% if flashes %}
+            {% for flash in flashes %}
+                <div class="sol-alert sol-alert--{{ flash.type }} sol-mb-md">{{ flash.message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if error %}
+            <div class="sol-alert sol-alert--error sol-mb-md">{{ error }}</div>
+        {% endif %}
+
+        <form method="post" class="sol-card">
+            <div class="sol-card__body">
+                <div class="sol-form-group">
+                    <label for="username" class="sol-label">Username</label>
+                    <input type="text" id="username" name="username" class="sol-input" required autofocus value="{{ last_username }}">
+                </div>
+                <div class="sol-form-group">
+                    <label for="password" class="sol-label">Password</label>
+                    <input type="password" id="password" name="password" class="sol-input" required>
+                </div>
+                <input type="hidden" name="_token" value="{{ csrf_token }}">
+            </div>
+            <div class="sol-card__footer sol-text-right">
+                <button type="submit" class="sol-btn sol-btn--primary">Sign in</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

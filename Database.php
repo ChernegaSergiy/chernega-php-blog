@@ -22,6 +22,7 @@ class Database
             $this->db = new SQLite3(__DIR__ . '/data/blog.db');
             $this->createTables();
             $this->initializeSettings();
+            $this->initializeDefaultAdmin();
         } catch (Exception $e) {
             $this->last_error = 'Database connection error: ' . $e->getMessage();
             error_log($this->last_error);
@@ -77,6 +78,32 @@ class Database
         }
     }
 
+    private function initializeDefaultAdmin(): void
+    {
+        $count = (int) $this->db->querySingle('SELECT COUNT(*) FROM admins');
+        if ($count > 0) {
+            return;
+        }
+
+        $defaultAdmin = $this->getConfigValue('default_admin', []);
+        $username = $defaultAdmin['username'] ?? 'admin';
+        $passwordHash = $defaultAdmin['password_hash'] ?? null;
+        $fallbackPassword = $defaultAdmin['password'] ?? 'admin123';
+
+        if (empty($passwordHash) && ! empty($fallbackPassword)) {
+            $passwordHash = password_hash($fallbackPassword, PASSWORD_DEFAULT);
+        }
+
+        if (empty($passwordHash)) {
+            $passwordHash = password_hash('admin123', PASSWORD_DEFAULT);
+        }
+
+        $stmt = $this->db->prepare('INSERT INTO admins (username, password) VALUES (:username, :password)');
+        $stmt->bindValue(':username', $username, SQLITE3_TEXT);
+        $stmt->bindValue(':password', $passwordHash, SQLITE3_TEXT);
+        $stmt->execute();
+    }
+
     /**
      * Gets all blog settings as an associative array
      *
@@ -91,6 +118,20 @@ class Database
         }
 
         return $settings;
+    }
+
+    /**
+     * Fetches an admin record by username
+     */
+    public function getAdminByUsername(string $username)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM admins WHERE username = :username LIMIT 1');
+        $stmt->bindValue(':username', $username, SQLITE3_TEXT);
+        $result = $stmt->execute();
+
+        $row = $result->fetchArray(SQLITE3_ASSOC);
+
+        return $row ?: null;
     }
 
     /**
@@ -481,6 +522,26 @@ class Database
         }
 
         return $rows;
+    }
+
+    private function getConfigValue(string $key, $default = null)
+    {
+        static $config = null;
+        if (null === $config) {
+            $configFile = __DIR__ . '/config/app.php';
+            if (file_exists($configFile)) {
+                $data = require $configFile;
+                if (is_array($data)) {
+                    $config = $data;
+                }
+            }
+
+            if (null === $config) {
+                $config = [];
+            }
+        }
+
+        return $config[$key] ?? $default;
     }
 
     /**

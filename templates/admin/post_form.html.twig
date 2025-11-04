@@ -1,0 +1,63 @@
+{% extends 'admin/base.html.twig' %}
+
+{% set admin_nav_active = nav_active %}
+
+{% block content %}
+    <div class="sol-terminal sol-mb-lg">
+        <span class="sol-prompt">admin {{ form_title|lower }}</span>
+    </div>
+
+    {% if errors %}
+        <div class="sol-alert sol-alert--error sol-mb-md">
+            <ul class="sol-list">
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form method="post" class="sol-card">
+        <div class="sol-card__body">
+            <div class="sol-form-group">
+                <label for="title" class="sol-label">Title</label>
+                <input type="text" id="title" name="title" class="sol-input" required value="{{ post.title }}">
+            </div>
+            <div class="sol-form-group">
+                <label for="slug" class="sol-label">Slug</label>
+                <input type="text" id="slug" name="slug" class="sol-input" value="{{ post.slug }}" placeholder="auto-generated if blank">
+            </div>
+            <div class="sol-form-group">
+                <label for="category" class="sol-label">Category</label>
+                <input type="text" id="category" name="category" class="sol-input" required value="{{ post.category }}">
+            </div>
+            <div class="sol-form-group">
+                <label for="meta_title" class="sol-label">Meta title</label>
+                <input type="text" id="meta_title" name="meta_title" class="sol-input" value="{{ post.meta_title }}">
+            </div>
+            <div class="sol-form-group">
+                <label for="meta_description" class="sol-label">Meta description</label>
+                <textarea id="meta_description" name="meta_description" class="sol-textarea" rows="3">{{ post.meta_description }}</textarea>
+            </div>
+            <div class="sol-form-group">
+                <label for="article_image" class="sol-label">Article image URL</label>
+                <input type="text" id="article_image" name="article_image" class="sol-input" value="{{ post.article_image }}" placeholder="Relative or absolute URL">
+            </div>
+            <div class="sol-form-group">
+                <label for="content" class="sol-label">Content (Markdown)</label>
+                <textarea id="content" name="content" class="sol-textarea" rows="16" required>{{ post.content }}</textarea>
+            </div>
+            {% if post.created_at %}
+                <div class="sol-form-group">
+                    <label for="created_at" class="sol-label">Created at (UTC)</label>
+                    <input type="datetime-local" id="created_at" name="created_at" class="sol-input" value="{{ post.created_at_local }}">
+                </div>
+            {% endif %}
+            <input type="hidden" name="_token" value="{{ csrf_token }}">
+        </div>
+        <div class="sol-card__footer sol-flex sol-flex--between">
+            <a href="/admin/" class="sol-btn sol-btn--secondary sol-btn--outline">Cancel</a>
+            <button type="submit" class="sol-btn sol-btn--primary">{{ submit_label }}</button>
+        </div>
+    </form>
+{% endblock %}

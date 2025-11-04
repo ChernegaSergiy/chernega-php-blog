@@ -15,8 +15,10 @@ if (! $post) {
 
 $parser = markdownParser();
 
+$baseUrl = getBaseUrl();
+
 $postForView = mapPostForDetails($post, $parser, [
-    'canonical_url' => 'https://chernega.eu.org/post.php?id=' . $postId,
+    'canonical_url' => $baseUrl . '/post.php?id=' . $postId,
     'debug_command' => 'post ' . $postId,
 ]);
 $postForView['meta_title'] = $post['meta_title'] ?: $post['title'];

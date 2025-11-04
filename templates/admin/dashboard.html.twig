@@ -1,0 +1,61 @@
+{% extends 'admin/base.html.twig' %}
+
+{% set admin_nav_active = 'dashboard' %}
+
+{% block content %}
+    <div class="sol-terminal sol-mb-lg">
+        <span class="sol-prompt">admin posts list</span>
+    </div>
+
+    {% if flashes %}
+        {% for flash in flashes %}
+            <div class="sol-alert sol-alert--{{ flash.type }} sol-mb-md">{{ flash.message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="sol-card">
+        <div class="sol-card__header sol-flex sol-flex--between sol-flex--center">
+            <span>Posts</span>
+            <a href="/admin/posts/create.php" class="sol-btn sol-btn--primary">Create post</a>
+        </div>
+        <div class="sol-card__body">
+            {% if posts is empty %}
+                <p class="text-muted">No posts yet.</p>
+            {% else %}
+                <div class="sol-table-responsive">
+                    <table class="sol-table">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Created</th>
+                            <th>Updated</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for post in posts %}
+                            <tr>
+                                <td>{{ post.id }}</td>
+                                <td>{{ post.title }}</td>
+                                <td>{{ post.category }}</td>
+                                <td>{{ post.created_at }}</td>
+                                <td>{{ post.updated_at }}</td>
+                                <td class="sol-text-right sol-space-x-sm">
+                                    <a href="/admin/posts/edit.php?id={{ post.id }}" class="sol-btn sol-btn--sm">Edit</a>
+                                    <form method="post" action="/admin/posts/delete.php" class="inline-form" onsubmit="return confirm('Delete this post?');">
+                                        <input type="hidden" name="id" value="{{ post.id }}">
+                                        <input type="hidden" name="_token" value="{{ csrf_token }}">
+                                        <button type="submit" class="sol-btn sol-btn--sm sol-btn--danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

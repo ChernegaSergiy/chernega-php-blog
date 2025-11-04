@@ -57,11 +57,12 @@ if (! $post) {
 }
 
 $parser = markdownParser();
+$baseUrl = getBaseUrl();
 $commandSlug = addcslashes($slug, "\"\\");
 
 $postForView = mapPostForDetails($post, $parser, [
-    'canonical_url' => 'https://chernega.eu.org/' . ltrim($post['slug'], '/'),
-    'debug_command' => sprintf('post_by_slug \"%s\"', $commandSlug),
+    'canonical_url' => $baseUrl . '/' . ltrim($post['slug'], '/'),
+    'debug_command' => sprintf('post_by_slug "%s"', $commandSlug),
 ]);
 $postForView['meta_title'] = $post['meta_title'] ?: $post['title'];
 
