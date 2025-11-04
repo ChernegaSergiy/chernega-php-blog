@@ -17,6 +17,9 @@ if (! verifyAdminCsrf($_POST['_token'] ?? '')) {
     exit;
 }
 
+$limitParam = isset($_POST['limit']) ? max(1, min(200, (int) $_POST['limit'])) : null;
+$offsetParam = isset($_POST['offset']) ? max(0, (int) $_POST['offset']) : null;
+
 $db = getAdminDatabase();
 $summary = media_cleanup_storage($db);
 
@@ -28,5 +31,15 @@ adminFlash('success', sprintf(
     $summary['removed_directories']
 ));
 
-header('Location: /admin/media/index.php');
+$query = [];
+if (null !== $limitParam) {
+    $query['limit'] = $limitParam;
+}
+if (null !== $offsetParam) {
+    $query['offset'] = max(0, $offsetParam);
+}
+
+$redirect = '/admin/media/index.php' . (empty($query) ? '' : '?' . http_build_query($query));
+
+header('Location: ' . $redirect);
 exit;

@@ -8,6 +8,8 @@ This directory contains the full PHP codebase powering **chernega.eu.org**, buil
 
 - **Twig templating** with a shared base layout and structured page templates.
 - **Admin panel** for creating, updating, and deleting posts through a secure dashboard.
+- **Role-aware access control** with granular permissions (viewer, editor, admin) and detailed audit logging.
+- **Media library** featuring optimized image uploads, automated housekeeping, and quick clipboard-ready URLs.
 - **SQLite-backed blog engine** with configurable posts-per-page and category filtering.
 - **Markdown authoring pipeline** via Parsedown for safe HTML rendering.
 - **Utility pages** including a Mermaid.js diagram visualiser and CSSM Unlimited License generator.
@@ -19,6 +21,7 @@ This directory contains the full PHP codebase powering **chernega.eu.org**, buil
   - `sqlite3`
   - `mbstring`
   - `json`
+  - `gd`
 - [Composer](https://getcomposer.org/) (optional but recommended) to install Twig.
 - Write permissions for `data/` and (optionally) `uploads/`.
 
@@ -111,6 +114,29 @@ To serve behind Apache/Nginx, configure the document root to this `html/` direct
 - After authentication you can create, edit, and delete posts; every action is CSRF-protected and validated before data is persisted.
 - Supply an `ADMIN_PASSWORD_HASH` environment variable to distribute a pre-hashed credential. Generate hashes with `password_hash('your-password', PASSWORD_DEFAULT)` in PHP.
 - Use `/admin/logout.php` to terminate the session; PHP's native session handler stores the session on the server.
+
+## Roles & Permissions
+
+| Role   | Capabilities |
+| :----- | :----------- |
+| `viewer` | Reserved for future read-only dashboards. |
+| `editor` | Manage posts and media assets, trigger upload optimization workflows. |
+| `admin`  | Full access: manage content, revoke media, adjust fellow admin roles (via database), and run housekeeping routines. |
+
+Roles are stored inside the `admins` table (`role` column). The default account seeded from `config/app.php` receives the `admin` role.
+
+## Media Library
+
+- Uploads live at `/uploads/media/<YYYY>/<MM>/<filename>`; the helper automatically creates the folder structure.
+- Images are resized to a safe maximum (1600×1600 by default), EXIF orientation is respected, and output quality is tuned per format.
+- The admin UI exposes copy-to-clipboard links, previews, and deletion controls. Editors can adjust items-per-page; admins can trigger housekeeping.
+- Housekeeping removes database records for missing files, deletes orphaned files on disk, and tidies up empty folders.
+
+## Audit Logs
+
+- Every privileged action (sign-in/out, post CRUD, media operations, housekeeping) is written to the `audit_logs` table.
+- The admin dashboard (/admin/) surfaces the most recent events, showing timestamp, actor, entity, metadata, and IP address.
+- Extend logging by calling `adminAudit()` inside custom workflows – metadata accepts arbitrary arrays and is stored as JSON.
 
 ## Twig Templates
 

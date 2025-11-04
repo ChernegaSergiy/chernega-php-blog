@@ -16,78 +16,131 @@
         {% endfor %}
     {% endif %}
 
+    <div class="sol-card sol-mb-lg media-summary">
+        <div class="sol-card__body sol-flex sol-flex--between sol-flex--center">
+            <div class="media-summary__metrics">
+                <div class="media-summary__metric">
+                    <span class="media-summary__label">Total files</span>
+                    <span class="media-summary__value">{{ media_stats.total_count }}</span>
+                </div>
+                <div class="media-summary__metric">
+                    <span class="media-summary__label">Library size</span>
+                    <span class="media-summary__value">{{ media_stats.total_size_human }}</span>
+                </div>
+                <div class="media-summary__metric">
+                    <span class="media-summary__label">Showing</span>
+                    <span class="media-summary__value">
+                        {% if media_stats.total_count %}
+                            {{ pagination.start }}–{{ pagination.end }} of {{ media_stats.total_count }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <div class="media-summary__actions sol-flex sol-space-x-sm">
+                {% if pagination.has_previous %}
+                    <a href="{{ pagination.previous_url }}" class="sol-btn sol-btn--secondary sol-btn--outline">Previous</a>
+                {% endif %}
+                {% if pagination.has_next %}
+                    <a href="{{ pagination.next_url }}" class="sol-btn sol-btn--secondary sol-btn--outline">Next</a>
+                {% endif %}
+                {% if is_super_admin %}
+                    <form method="post" action="/admin/media/cleanup.php" class="inline-form" onsubmit="return confirm('Run housekeeping now?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token }}">
+                        <input type="hidden" name="limit" value="{{ media_stats.limit }}">
+                        <input type="hidden" name="offset" value="{{ media_stats.offset }}">
+                        <button type="submit" class="sol-btn sol-btn--danger sol-btn--outline">Housekeeping</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
     {% if can_manage_media %}
         <form class="sol-card sol-mb-lg" method="post" action="/admin/media/upload.php" enctype="multipart/form-data">
             <div class="sol-card__header">Upload media</div>
-            <div class="sol-card__body">
-                <div class="sol-form-group">
+            <div class="sol-card__body sol-grid">
+                <div class="sol-form-group sol-col-md-6">
                     <label for="media_file" class="sol-label">Choose image</label>
                     <input type="file" id="media_file" name="media_file" accept="image/*" class="sol-input" required>
                 </div>
-                <p class="text-muted">Supported formats: JPEG, PNG, GIF, WebP. Maximum size 10 MB.</p>
+                <div class="sol-form-group sol-col-md-6">
+                    <label for="media_limit" class="sol-label">Items per page</label>
+                    <select id="media_limit" class="sol-input" onchange="location.href='/admin/media/index.php?limit=' + this.value" aria-label="Items per page">
+                        {% for option in [12, 24, 30, 60, 120] %}
+                            <option value="{{ option }}" {% if option == media_stats.limit %}selected{% endif %}>{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="text-muted">Adjust to display more results per page.</p>
+                </div>
+                <div class="sol-col-md-12 text-muted">
+                    Supported formats: JPEG, PNG, GIF, WebP. Maximum size 10 MB. Images are automatically resized to a safe resolution.
+                </div>
             </div>
             <div class="sol-card__footer sol-text-right">
                 <input type="hidden" name="_token" value="{{ csrf_token }}">
+                <input type="hidden" name="media_limit" value="{{ media_stats.limit }}">
                 <button type="submit" class="sol-btn sol-btn--primary">Upload</button>
             </div>
         </form>
     {% endif %}
 
     <div class="sol-card">
-        <div class="sol-card__header sol-flex sol-flex--between sol-flex--center">
-            <span>Stored media</span>
-            {% if is_super_admin %}
-                <form method="post" action="/admin/media/cleanup.php" class="inline-form" onsubmit="return confirm('Run housekeeping now?');">
-                    <input type="hidden" name="_token" value="{{ csrf_token }}">
-                    <button type="submit" class="sol-btn sol-btn--secondary sol-btn--outline">Run housekeeping</button>
-                </form>
-            {% endif %}
-        </div>
+        <div class="sol-card__header">Stored media</div>
         <div class="sol-card__body">
             {% if media_files is empty %}
                 <p class="text-muted">No media uploaded yet.</p>
             {% else %}
-                <div class="sol-table-responsive">
-                    <table class="sol-table sol-table--compact">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Preview</th>
-                            <th>Filename</th>
-                            <th>Type</th>
-                            <th>Size</th>
-                            <th>Dimensions</th>
-                            <th>Uploaded</th>
-                            {% if can_manage_media %}<th class="sol-text-right">Actions</th>{% endif %}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for file in media_files %}
-                            <tr>
-                                <td>{{ file.id }}</td>
-                                <td>
-                                    <img src="/uploads/media/{{ file.storage_path }}" alt="{{ file.original_filename }}" style="max-height:60px; max-width:80px;">
-                                </td>
-                                <td>{{ file.original_filename }}</td>
-                                <td>{{ file.mime_type }}</td>
-                                <td>{{ (file.size_bytes / 1024)|number_format(1) }} KB</td>
-                                <td>{{ file.width ? file.width ~ '×' ~ file.height : '—' }}</td>
-                                <td>{{ file.created_at }}</td>
-                                {% if can_manage_media %}
-                                    <td class="sol-text-right">
+                <div class="media-grid">
+                    {% for file in media_files %}
+                        <article class="media-card">
+                            <div class="media-card__preview">
+                                <img src="{{ file.url }}" alt="{{ file.original_filename }}" loading="lazy">
+                            </div>
+                            <div class="media-card__body">
+                                <h3 class="media-card__title" title="{{ file.original_filename }}">{{ file.original_filename }}</h3>
+                                <p class="media-card__meta">{{ file.mime_type }} · {{ file.size_human }}{% if file.width %} · {{ file.width }}×{{ file.height }}px{% endif %}</p>
+                                <p class="media-card__meta">Uploaded {{ file.created_at }}</p>
+                                <div class="media-card__actions">
+                                    <a href="{{ file.url }}" class="sol-btn sol-btn--sm" target="_blank" rel="noopener">Open</a>
+                                    <button type="button" class="sol-btn sol-btn--sm sol-btn--secondary" data-copy-url="{{ file.url }}">Copy URL</button>
+                                    {% if can_manage_media %}
                                         <form method="post" action="/admin/media/delete.php" class="inline-form" onsubmit="return confirm('Delete this media item?');">
                                             <input type="hidden" name="id" value="{{ file.id }}">
                                             <input type="hidden" name="_token" value="{{ csrf_token }}">
+                                            <input type="hidden" name="limit" value="{{ media_stats.limit }}">
+                                            <input type="hidden" name="offset" value="{{ media_stats.offset }}">
                                             <button type="submit" class="sol-btn sol-btn--sm sol-btn--danger">Delete</button>
                                         </form>
-                                    </td>
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
                 </div>
             {% endif %}
         </div>
     </div>
+
+    <script>
+        document.addEventListener('click', function (event) {
+            var trigger = event.target.closest('[data-copy-url]');
+            if (!trigger) {
+                return;
+            }
+            event.preventDefault();
+            var url = trigger.getAttribute('data-copy-url');
+            navigator.clipboard.writeText(url).then(function () {
+                trigger.textContent = 'Copied';
+                trigger.classList.add('sol-btn--success');
+                setTimeout(function () {
+                    trigger.textContent = 'Copy URL';
+                    trigger.classList.remove('sol-btn--success');
+                }, 1500);
+            }).catch(function () {
+                alert('Unable to copy to clipboard.');
+            });
+        });
+    </script>
 {% endblock %}

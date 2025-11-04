@@ -63,5 +63,11 @@ try {
     adminFlash('error', $e->getMessage());
 }
 
-header('Location: /admin/media/index.php');
+$limitParam = isset($_POST['media_limit']) ? (int) $_POST['media_limit'] : null;
+$redirect = '/admin/media/index.php';
+if (null !== $limitParam && $limitParam > 0) {
+    $redirect .= '?limit=' . max(1, min(200, $limitParam));
+}
+
+header('Location: ' . $redirect);
 exit;

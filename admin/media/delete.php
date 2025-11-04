@@ -24,6 +24,9 @@ if ($mediaId <= 0) {
     exit;
 }
 
+$limitParam = isset($_POST['limit']) ? max(1, min(200, (int) $_POST['limit'])) : null;
+$offsetParam = isset($_POST['offset']) ? max(0, (int) $_POST['offset']) : null;
+
 $db = getAdminDatabase();
 $media = $db->getMediaById($mediaId);
 if (! $media) {
@@ -51,5 +54,15 @@ if (empty($errors)) {
     adminFlash('error', implode(' ', $errors));
 }
 
-header('Location: /admin/media/index.php');
+$query = [];
+if (null !== $limitParam) {
+    $query['limit'] = $limitParam;
+}
+if (null !== $offsetParam) {
+    $query['offset'] = max(0, $offsetParam);
+}
+
+$redirect = '/admin/media/index.php' . (empty($query) ? '' : '?' . http_build_query($query));
+
+header('Location: ' . $redirect);
 exit;

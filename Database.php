@@ -705,6 +705,17 @@ class Database
 
         return true;
     }
+    public function countMediaFiles(): int
+    {
+        return (int) $this->db->querySingle('SELECT COUNT(*) FROM media_files');
+    }
+
+    public function sumMediaSize(): int
+    {
+        $value = $this->db->querySingle('SELECT COALESCE(SUM(size_bytes), 0) FROM media_files');
+
+        return null === $value ? 0 : (int) $value;
+    }
     /**
      * Fetches all rows from a query result
      *

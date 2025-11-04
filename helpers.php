@@ -68,6 +68,22 @@ function formatDateToKiev(string $datetime): string
     return $date->format('Y-m-d');
 }
 
+function formatBytes(int $bytes, int $precision = 1): string
+{
+    if ($bytes <= 0) {
+        return '0 B';
+    }
+
+    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    $power = (int) floor(log($bytes, 1024));
+    $power = max(0, min($power, count($units) - 1));
+    $value = $bytes / (1024 ** $power);
+
+    $decimals = $power >= 2 ? 2 : $precision;
+
+    return number_format($value, $decimals) . ' ' . $units[$power];
+}
+
 /**
  * Normalizes post data for list views.
  */
