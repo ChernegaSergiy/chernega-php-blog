@@ -21,6 +21,9 @@ class Database
             }
             $this->db = new SQLite3(__DIR__ . '/data/blog.db');
             $this->createTables();
+            $this->ensureAdminRoleColumn();
+            $this->createAuditLogTable();
+            $this->createMediaTable();
             $this->initializeSettings();
             $this->initializeDefaultAdmin();
         } catch (Exception $e) {
@@ -39,6 +42,7 @@ class Database
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
+            role TEXT NOT NULL DEFAULT "editor",
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )');
 
@@ -59,6 +63,54 @@ class Database
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             setting_name TEXT UNIQUE NOT NULL,
             setting_value TEXT
+        )');
+    }
+
+    private function ensureAdminRoleColumn(): void
+    {
+        $columnExists = false;
+        $result = $this->db->query('PRAGMA table_info(admins)');
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            if (isset($row['name']) && 'role' === $row['name']) {
+                $columnExists = true;
+                break;
+            }
+        }
+
+        if (! $columnExists) {
+            $this->db->exec('ALTER TABLE admins ADD COLUMN role TEXT NOT NULL DEFAULT "editor"');
+            $this->db->exec('UPDATE admins SET role = "editor" WHERE role IS NULL OR role = ""');
+        }
+    }
+
+    private function createAuditLogTable(): void
+    {
+        $this->db->exec('CREATE TABLE IF NOT EXISTS audit_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            admin_id INTEGER,
+            action TEXT NOT NULL,
+            entity_type TEXT,
+            entity_id INTEGER,
+            metadata TEXT,
+            ip_address TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(admin_id) REFERENCES admins(id)
+        )');
+    }
+
+    private function createMediaTable(): void
+    {
+        $this->db->exec('CREATE TABLE IF NOT EXISTS media_files (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            filename TEXT NOT NULL,
+            original_filename TEXT NOT NULL,
+            storage_path TEXT NOT NULL,
+            mime_type TEXT NOT NULL,
+            size_bytes INTEGER NOT NULL,
+            width INTEGER,
+            height INTEGER,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )');
     }
 
@@ -89,6 +141,7 @@ class Database
         $username = $defaultAdmin['username'] ?? 'admin';
         $passwordHash = $defaultAdmin['password_hash'] ?? null;
         $fallbackPassword = $defaultAdmin['password'] ?? 'admin123';
+        $role = $defaultAdmin['role'] ?? 'admin';
 
         if (empty($passwordHash) && ! empty($fallbackPassword)) {
             $passwordHash = password_hash($fallbackPassword, PASSWORD_DEFAULT);
@@ -98,9 +151,10 @@ class Database
             $passwordHash = password_hash('admin123', PASSWORD_DEFAULT);
         }
 
-        $stmt = $this->db->prepare('INSERT INTO admins (username, password) VALUES (:username, :password)');
+        $stmt = $this->db->prepare('INSERT INTO admins (username, password, role) VALUES (:username, :password, :role)');
         $stmt->bindValue(':username', $username, SQLITE3_TEXT);
         $stmt->bindValue(':password', $passwordHash, SQLITE3_TEXT);
+        $stmt->bindValue(':role', $role, SQLITE3_TEXT);
         $stmt->execute();
     }
 

@@ -9,5 +9,6 @@ return [
         'username' => getenv('ADMIN_USERNAME') ?: 'admin',
         'password' => getenv('ADMIN_PASSWORD') ?: 'admin123',
         'password_hash' => getenv('ADMIN_PASSWORD_HASH') ?: null,
+        'role' => getenv('ADMIN_ROLE') ?: 'admin',
     ],
 ];
