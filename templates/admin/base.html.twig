@@ -10,6 +10,7 @@
         <a href="/admin/" class="site-header__nav-link {{ admin_nav_active == 'dashboard' ? 'site-header__nav-link--active' : '' }}">dashboard</a>
         {% if can_edit_content %}
             <a href="/admin/posts/create.php" class="site-header__nav-link {{ admin_nav_active == 'create' ? 'site-header__nav-link--active' : '' }}">create</a>
+            <a href="/admin/media/index.php" class="site-header__nav-link {{ admin_nav_active == 'media' ? 'site-header__nav-link--active' : '' }}">media</a>
         {% endif %}
         <a href="/" class="site-header__nav-link" target="_blank" rel="noopener">view site</a>
         <span class="site-header__nav-user">{{ current_admin.username|default('guest') }} · {{ current_role }}</span>

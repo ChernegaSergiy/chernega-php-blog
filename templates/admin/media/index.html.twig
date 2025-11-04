@@ -1,0 +1,93 @@
+{% extends 'admin/base.html.twig' %}
+
+{% set admin_nav_active = 'media' %}
+{% set current_role = current_admin.role|default('viewer') %}
+{% set can_manage_media = current_role in ['editor', 'admin'] %}
+{% set is_super_admin = current_role == 'admin' %}
+
+{% block content %}
+    <div class="sol-terminal sol-mb-lg">
+        <span class="sol-prompt">admin media library</span>
+    </div>
+
+    {% if flashes %}
+        {% for flash in flashes %}
+            <div class="sol-alert sol-alert--{{ flash.type }} sol-mb-md">{{ flash.message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if can_manage_media %}
+        <form class="sol-card sol-mb-lg" method="post" action="/admin/media/upload.php" enctype="multipart/form-data">
+            <div class="sol-card__header">Upload media</div>
+            <div class="sol-card__body">
+                <div class="sol-form-group">
+                    <label for="media_file" class="sol-label">Choose image</label>
+                    <input type="file" id="media_file" name="media_file" accept="image/*" class="sol-input" required>
+                </div>
+                <p class="text-muted">Supported formats: JPEG, PNG, GIF, WebP. Maximum size 10 MB.</p>
+            </div>
+            <div class="sol-card__footer sol-text-right">
+                <input type="hidden" name="_token" value="{{ csrf_token }}">
+                <button type="submit" class="sol-btn sol-btn--primary">Upload</button>
+            </div>
+        </form>
+    {% endif %}
+
+    <div class="sol-card">
+        <div class="sol-card__header sol-flex sol-flex--between sol-flex--center">
+            <span>Stored media</span>
+            {% if is_super_admin %}
+                <form method="post" action="/admin/media/cleanup.php" class="inline-form" onsubmit="return confirm('Run housekeeping now?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token }}">
+                    <button type="submit" class="sol-btn sol-btn--secondary sol-btn--outline">Run housekeeping</button>
+                </form>
+            {% endif %}
+        </div>
+        <div class="sol-card__body">
+            {% if media_files is empty %}
+                <p class="text-muted">No media uploaded yet.</p>
+            {% else %}
+                <div class="sol-table-responsive">
+                    <table class="sol-table sol-table--compact">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Preview</th>
+                            <th>Filename</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Dimensions</th>
+                            <th>Uploaded</th>
+                            {% if can_manage_media %}<th class="sol-text-right">Actions</th>{% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for file in media_files %}
+                            <tr>
+                                <td>{{ file.id }}</td>
+                                <td>
+                                    <img src="/uploads/media/{{ file.storage_path }}" alt="{{ file.original_filename }}" style="max-height:60px; max-width:80px;">
+                                </td>
+                                <td>{{ file.original_filename }}</td>
+                                <td>{{ file.mime_type }}</td>
+                                <td>{{ (file.size_bytes / 1024)|number_format(1) }} KB</td>
+                                <td>{{ file.width ? file.width ~ '×' ~ file.height : '—' }}</td>
+                                <td>{{ file.created_at }}</td>
+                                {% if can_manage_media %}
+                                    <td class="sol-text-right">
+                                        <form method="post" action="/admin/media/delete.php" class="inline-form" onsubmit="return confirm('Delete this media item?');">
+                                            <input type="hidden" name="id" value="{{ file.id }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token }}">
+                                            <button type="submit" class="sol-btn sol-btn--sm sol-btn--danger">Delete</button>
+                                        </form>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -634,6 +634,77 @@ class Database
         return $this->fetchAll($result);
     }
 
+    public function addMediaFile(string $filename, string $originalFilename, string $storagePath, string $mimeType, int $sizeBytes, ?int $width, ?int $height)
+    {
+        $stmt = $this->db->prepare('INSERT INTO media_files (filename, original_filename, storage_path, mime_type, size_bytes, width, height) VALUES (:filename, :original_filename, :storage_path, :mime_type, :size_bytes, :width, :height)');
+        $stmt->bindValue(':filename', $filename, SQLITE3_TEXT);
+        $stmt->bindValue(':original_filename', $originalFilename, SQLITE3_TEXT);
+        $stmt->bindValue(':storage_path', $storagePath, SQLITE3_TEXT);
+        $stmt->bindValue(':mime_type', $mimeType, SQLITE3_TEXT);
+        $stmt->bindValue(':size_bytes', $sizeBytes, SQLITE3_INTEGER);
+        if (null === $width) {
+            $stmt->bindValue(':width', null, SQLITE3_NULL);
+        } else {
+            $stmt->bindValue(':width', $width, SQLITE3_INTEGER);
+        }
+        if (null === $height) {
+            $stmt->bindValue(':height', null, SQLITE3_NULL);
+        } else {
+            $stmt->bindValue(':height', $height, SQLITE3_INTEGER);
+        }
+
+        $result = $stmt->execute();
+        if (false === $result) {
+            $this->last_error = $this->db->lastErrorMsg();
+
+            return false;
+        }
+
+        return (int) $this->db->lastInsertRowID();
+    }
+
+    public function getMediaFiles(?int $limit = 50, int $offset = 0): array
+    {
+        $sql = 'SELECT * FROM media_files ORDER BY created_at DESC';
+        if (null !== $limit) {
+            $sql .= ' LIMIT :limit OFFSET :offset';
+        }
+
+        $stmt = $this->db->prepare($sql);
+        if (null !== $limit) {
+            $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
+            $stmt->bindValue(':offset', max(0, $offset), SQLITE3_INTEGER);
+        }
+
+        $result = $stmt->execute();
+
+        return $this->fetchAll($result);
+    }
+
+    public function getMediaById(int $id)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM media_files WHERE id = :id LIMIT 1');
+        $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+
+        $row = $result->fetchArray(SQLITE3_ASSOC);
+
+        return $row ?: null;
+    }
+
+    public function deleteMedia(int $id): bool
+    {
+        $stmt = $this->db->prepare('DELETE FROM media_files WHERE id = :id');
+        $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+
+        if (false === $result) {
+            $this->last_error = $this->db->lastErrorMsg();
+            return false;
+        }
+
+        return true;
+    }
     /**
      * Fetches all rows from a query result
      *
