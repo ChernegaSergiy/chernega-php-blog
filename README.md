@@ -48,7 +48,7 @@ html/
 └── ul-generator.php       # CSSM Unlimited License generator controller
 ```
 
-Static assets live under `assets/` (CSS, JS, fonts) and site metadata icons reside alongside the controllers (favicons, manifests, etc.).
+Static assets live under `assets/` (CSS, JS, fonts). Iconography resides in `assets/icons/`, while PWA metadata is grouped under `assets/manifest/`.
 
 ## Installing Twig
 
