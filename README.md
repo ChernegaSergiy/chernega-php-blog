@@ -30,22 +30,22 @@ This directory contains the full PHP codebase powering **chernega.eu.org**, buil
 ## Directory Layout
 
 ```
-html/
-├── 404.php                # Renders the custom 404 page via Twig
-├── about.php              # Static "About" page controller
-├── bootstrap.php          # Twig environment bootstrap
-├── contact.php            # Static "Contact" page controller
-├── data/                  # SQLite database storage (blog.db)
-├── Database.php           # SQLite data access layer
-├── helpers.php            # Markdown + view-model helpers
-├── index.php              # Homepage controller (recent posts)
-├── mermaid-diagrams.php   # Mermaid.js playground controller
-├── Parsedown.php          # Bundled Markdown parser
-├── post.php               # Post view by numeric ID
-├── post_slug.php          # Post view by slug
-├── posts.php              # Paginated post catalogue + search/filter
-├── templates/             # Twig templates (base, posts, static, tools)
-└── ul-generator.php       # CSSM Unlimited License generator controller
+.
++-- 404.php               # Renders the custom 404 page via Twig
++-- about.php             # Static "About" page controller
++-- bootstrap.php         # Twig environment bootstrap
++-- contact.php           # Static "Contact" page controller
++-- data/                 # SQLite database storage (blog.db)
++-- Database.php          # SQLite data access layer
++-- helpers.php           # Markdown + view-model helpers
++-- index.php             # Homepage controller (recent posts)
++-- mermaid-diagrams.php  # Mermaid.js playground controller
++-- Parsedown.php         # Bundled Markdown parser
++-- post.php              # Post view by numeric ID
++-- post_slug.php         # Post view by slug
++-- posts.php             # Paginated post catalogue + search/filter
++-- templates/            # Twig templates (base, posts, static, tools)
+\-- ul-generator.php      # CSSM Unlimited License generator controller
 ```
 
 Static assets live under `assets/` (CSS, JS, fonts). Iconography resides in `assets/icons/`, while PWA metadata is grouped under `assets/manifest/`.
@@ -165,6 +165,7 @@ Modify the navigation or footer once in `base.html.twig`. Controller PHP files c
 ## Assets & Frontend
 
 All styling relies on `assets/css/main.css` (Solarized terminal aesthetic). JavaScript is used sparingly:
+
 - Mermaid visualiser loads the CDN bundle.
 - License generator embeds a small inline script for form handling.
 - No build pipeline is required; everything is vanilla CSS/JS.
