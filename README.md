@@ -192,3 +192,7 @@ All styling relies on `assets/css/main.css` (Solarized terminal aesthetic). Java
 - Add media uploads with automated image optimisation and storage housekeeping.
 - Automate testing (PHPUnit) and linting within a CI pipeline.
 - Provide API endpoints (REST/JSON) for headless or mobile clients.
+
+## License
+
+This project is licensed under the CSSM Unlimited License v2.0 (CSSM-ULv2). See the [LICENSE](LICENSE) file for details.
