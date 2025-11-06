@@ -186,13 +186,6 @@ All styling relies on `assets/css/main.css` (Solarized terminal aesthetic). Java
 - **Incorrect dates** — Server timezone not UTC. Ensure timestamps stored as UTC; helper converts to `Europe/Kiev`.
 - **404 for `/some-slug`** — Slug absent or conflicts with protected filenames. Confirm slug exists and is not blacklisted in `post_slug.php`.
 
-## Future Ideas
-
-- Introduce role-based permissions and audit logging for administrators.
-- Add media uploads with automated image optimisation and storage housekeeping.
-- Automate testing (PHPUnit) and linting within a CI pipeline.
-- Provide API endpoints (REST/JSON) for headless or mobile clients.
-
 ## License
 
 This project is licensed under the CSSM Unlimited License v2.0 (CSSM-ULv2). See the [LICENSE](LICENSE) file for details.
