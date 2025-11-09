@@ -15,7 +15,7 @@
         <form class="sol-card__body" id="licenseForm">
             <div class="sol-form-group">
                 <label for="year" class="sol-label">Рік авторських прав (YYYY)</label>
-                <input type="text" id="year" pattern="\\d{4}" title="Введіть 4 цифри року" required value="{{ current_year }}" class="sol-input">
+                <input type="text" id="year" pattern="[0-9]{4}" inputmode="numeric" title="Введіть 4 цифри року" required value="{{ current_year }}" class="sol-input">
             </div>
             <div class="sol-form-group">
                 <label for="holder" class="sol-label">Повне ім'я або назва організації (правовласник)</label>
@@ -29,19 +29,24 @@
 
     <script>
         function generateLicense(event) {
-            event.preventDefault();
+            if (event) {
+                event.preventDefault();
+            }
 
+            const skipValidation = event && event.type === 'load';
             const yearInput = document.getElementById('year');
             const holderInput = document.getElementById('holder');
             const licenseOutputDiv = document.getElementById('licenseOutput');
 
-            if (!yearInput.checkValidity()) {
+            yearInput.value = yearInput.value.trim();
+
+            if (!skipValidation && !yearInput.checkValidity()) {
                 alert('Будь ласка, введіть коректний рік (4 цифри)');
                 yearInput.focus();
                 return;
             }
 
-            if (!holderInput.value.trim()) {
+            if (!skipValidation && !holderInput.value.trim()) {
                 alert('Будь ласка, вкажіть правовласника');
                 holderInput.focus();
                 return;
