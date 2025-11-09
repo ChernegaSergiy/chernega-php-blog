@@ -1,0 +1,47 @@
+{% extends 'admin/base.html.twig' %}
+
+{% set admin_nav_active = 'settings' %}
+
+{% block content %}
+    <div class="sol-terminal sol-mb-lg">
+        <span class="sol-prompt">admin configure site_settings</span>
+    </div>
+
+    {% if flashes %}
+        {% for flash in flashes %}
+            <div class="sol-alert sol-alert--{{ flash.type }}">{{ flash.message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if errors %}
+        <div class="sol-alert sol-alert--error sol-mb-md">
+            <ul class="sol-list">
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form method="post" class="sol-card sol-card--form">
+        <div class="sol-card__header">Site Settings</div>
+        <div class="sol-card__body">
+            <div class="sol-form-group">
+                <label for="blog_title" class="sol-label">Blog title</label>
+                <input type="text" id="blog_title" name="blog_title" class="sol-input" required value="{{ settings.blog_title }}">
+                <p class="sol-help-text">Shown in the site header and metadata.</p>
+            </div>
+
+            <div class="sol-form-group">
+                <label for="posts_per_page" class="sol-label">Posts per page</label>
+                <input type="number" id="posts_per_page" name="posts_per_page" class="sol-input" min="1" max="50" required value="{{ settings.posts_per_page }}">
+                <p class="sol-help-text">Controls how many articles appear before pagination kicks in.</p>
+            </div>
+        </div>
+        <div class="sol-card__footer sol-flex sol-flex--between">
+            <a href="/admin/" class="sol-btn sol-btn--secondary sol-btn--outline">Cancel</a>
+            <button type="submit" class="sol-btn sol-btn--primary">Save settings</button>
+        </div>
+        <input type="hidden" name="_token" value="{{ csrf_token }}">
+    </form>
+{% endblock %}

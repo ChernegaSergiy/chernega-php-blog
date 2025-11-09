@@ -92,7 +92,12 @@ You can pre-populate posts via your own script or by calling `$db->addPost(...)`
 
 Use PHP's built-in server from the `html/` directory:
 ```bash
-php -S 127.0.0.1:8000 -t .
+php -S 127.0.0.1:8000 -t . router.php
+```
+
+Or run the Composer helper:
+```bash
+composer serve
 ```
 
 Then open <http://127.0.0.1:8000/> in your browser. Frequently used entry points:

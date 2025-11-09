@@ -1,0 +1,15 @@
+RewriteEngine On
+
+# Serve existing files as-is
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Serve existing directories as-is
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Route slug-style URLs (without dots or extra segments) to post_slug.php
+RewriteRule ^([A-Za-z0-9\-\_]+?)/?$ post_slug.php?slug=$1 [L,QSA]
+
+# Fallback to slug handler for any other unmatched request
+FallbackResource /post_slug.php

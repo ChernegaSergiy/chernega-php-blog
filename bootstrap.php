@@ -1,4 +1,5 @@
 <?php
+use Exception;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -72,7 +73,7 @@ function twig(): Environment
         'auto_reload' => 'production' !== $config['env'],
     ]);
 
-    $twig->addGlobal('site', [
+    $siteInfo = [
         'title' => '~/chernega.blog',
         'navigation' => [
             ['label' => 'posts', 'url' => '/posts.php'],
@@ -81,9 +82,31 @@ function twig(): Environment
         ],
         'footer' => '© 2024 chernega.eu.org | Powered by SOLARIZED TERMINAL UI',
         'base_url' => $config['base_url'],
-    ]);
+    ];
+
+    if (! class_exists(Database::class)) {
+        $databasePath = __DIR__ . '/Database.php';
+        if (file_exists($databasePath)) {
+            require_once $databasePath;
+        }
+    }
+
+    if (class_exists(Database::class)) {
+        try {
+            $settingsDb = new Database();
+            $blogSettings = $settingsDb->getBlogSettings();
+            if (! empty($blogSettings['blog_title'])) {
+                $siteInfo['title'] = $blogSettings['blog_title'];
+            }
+        } catch (Exception $e) {
+            // ignore settings load errors to keep bootstrap resilient
+        }
+    }
+
+    $twig->addGlobal('site', $siteInfo);
 
     $twig->addGlobal('config', $config);
+    $twig->addGlobal('current_path', $_SERVER['REQUEST_URI']);
 
     return $twig;
 }
