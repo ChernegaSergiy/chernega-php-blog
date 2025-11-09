@@ -73,13 +73,15 @@
                     return;
                 }
 
-                try {
-                    const uniqueId = 'mermaid-' + Date.now();
-                    const { svg } = window.mermaid.render(uniqueId, diagramCode);
-                    output.innerHTML = svg;
-                } catch (error) {
-                    output.innerHTML = '<div class="sol-alert sol-alert--error">Помилка рендерингу: ' + error.message + '</div>';
-                }
+                const uniqueId = 'mermaid-' + Date.now();
+
+                Promise.resolve(window.mermaid.render(uniqueId, diagramCode))
+                    .then(result => {
+                        output.innerHTML = result.svg;
+                    })
+                    .catch(error => {
+                        output.innerHTML = '<div class="sol-alert sol-alert--error">Помилка рендерингу: ' + (error && error.message ? error.message : String(error)) + '</div>';
+                    });
             }
 
             renderButton.addEventListener('click', renderDiagram);
