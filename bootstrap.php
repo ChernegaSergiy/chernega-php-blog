@@ -1,5 +1,4 @@
 <?php
-use Exception;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
