@@ -25,7 +25,7 @@
             <a href="/" class="site-header__title">{{ site.title }}</a>
             <nav class="site-header__nav">
                 {% for item in site.navigation %}
-                    <a href="{{ item.url }}" class="site-header__nav-link">{{ item.label }}</a>
+                    <a href="{{ item.url }}" class="site-header__nav-link {{ current_path == item.url ? 'active' : '' }}">{{ item.label }}</a>
                 {% endfor %}
             </nav>
         {% endblock %}
