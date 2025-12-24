@@ -42,6 +42,7 @@ if ('POST' === $_SERVER['REQUEST_METHOD']) {
 }
 
 $csrfToken = adminCsrfToken();
+$recentMedia = $db->getMediaFiles(12);
 
 echo twig()->render('admin/post_form.html.twig', [
     'form_title' => 'Create Post',
@@ -51,4 +52,5 @@ echo twig()->render('admin/post_form.html.twig', [
     'nav_active' => 'create',
     'csrf_token' => $csrfToken,
     'current_admin' => adminAuth(),
+    'recent_media' => $recentMedia,
 ]);
