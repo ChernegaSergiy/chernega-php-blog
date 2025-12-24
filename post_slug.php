@@ -4,7 +4,7 @@ require_once __DIR__ . '/Database.php';
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/bootstrap.php';
 
-function renderNotFound(): void
+function renderSlugNotFound(): void
 {
     header('HTTP/1.0 404 Not Found');
     echo twig()->render('static/404.html.twig', [
@@ -47,13 +47,13 @@ $systemFilesSlugs = [
 if (in_array($slug, $systemFilesSlugs, true) ||
     in_array($slug . '.php', $systemFilesSlugs, true) ||
     in_array($slug . '.html', $systemFilesSlugs, true)) {
-    renderNotFound();
+    renderSlugNotFound();
 }
 
 $post = $db->getPostBySlug($slug);
 
 if (! $post) {
-    renderNotFound();
+    renderSlugNotFound();
 }
 
 $parser = markdownParser();
