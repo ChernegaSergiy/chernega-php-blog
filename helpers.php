@@ -93,7 +93,7 @@ function mapPostForList(array $post, Parsedown $parser): array
         'id' => (int) $post['id'],
         'title' => $post['title'],
         'slug' => $post['slug'],
-        'url' => '/' . ltrim($post['slug'], '/'),
+        'url' => '/post.php?slug=' . $post['slug'],
         'category' => $post['category'],
         'category_url' => '/posts.php?category=' . urlencode($post['category']),
         'date' => formatDateToKiev($post['created_at']),
