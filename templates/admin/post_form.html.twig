@@ -24,29 +24,55 @@
                 <input type="text" id="title" name="title" class="sol-input" required value="{{ post.title }}">
             </div>
             <div class="sol-form-group">
-                <label for="slug" class="sol-label">Slug</label>
-                <input type="text" id="slug" name="slug" class="sol-input" value="{{ post.slug }}" placeholder="auto-generated if blank">
-            </div>
-            <div class="sol-form-group">
                 <label for="category" class="sol-label">Category</label>
                 <input type="text" id="category" name="category" class="sol-input" required value="{{ post.category }}">
             </div>
-            <div class="sol-form-group">
-                <label for="meta_title" class="sol-label">Meta title</label>
-                <input type="text" id="meta_title" name="meta_title" class="sol-input" value="{{ post.meta_title }}">
+
+            <div class="sol-card sol-mb-md">
+                <div class="sol-card__header">Meta Fields & SEO</div>
+                <div class="sol-card__body">
+                    <div class="sol-form-group">
+                        <label for="slug" class="sol-label">Slug</label>
+                        <input type="text" id="slug" name="slug" class="sol-input" value="{{ post.slug }}" placeholder="auto-generated if blank">
+                    </div>
+                    <div class="sol-form-group">
+                        <label for="meta_title" class="sol-label">Meta title</label>
+                        <input type="text" id="meta_title" name="meta_title" class="sol-input" value="{{ post.meta_title }}">
+                    </div>
+                    <div class="sol-form-group">
+                        <label for="meta_description" class="sol-label">Meta description</label>
+                        <textarea id="meta_description" name="meta_description" class="sol-textarea" rows="3">{{ post.meta_description }}</textarea>
+                    </div>
+                    <div class="sol-form-group">
+                        <label for="article_image" class="sol-label">Article image URL</label>
+                        <input type="text" id="article_image" name="article_image" class="sol-input" value="{{ post.article_image }}" placeholder="Relative or absolute URL">
+                    </div>
+                </div>
             </div>
-            <div class="sol-form-group">
-                <label for="meta_description" class="sol-label">Meta description</label>
-                <textarea id="meta_description" name="meta_description" class="sol-textarea" rows="3">{{ post.meta_description }}</textarea>
-            </div>
-            <div class="sol-form-group">
-                <label for="article_image" class="sol-label">Article image URL</label>
-                <input type="text" id="article_image" name="article_image" class="sol-input" value="{{ post.article_image }}" placeholder="Relative or absolute URL">
-            </div>
+
             <div class="sol-form-group">
                 <label for="content" class="sol-label">Content (Markdown)</label>
                 <textarea id="content" name="content" class="sol-textarea" rows="16" required>{{ post.content }}</textarea>
             </div>
+
+            {% if recent_media is defined and recent_media %}
+                <div class="sol-card sol-mt-md">
+                    <div class="sol-card__header">Recent Media</div>
+                    <div class="sol-card__body media-grid">
+                        {% for file in recent_media %}
+                            <article class="media-card" data-url="/{{ file.storage_path|trim('/') }}" data-alt="{{ file.original_filename|escape('html_attr') }}" style="cursor: pointer;">
+                                <div class="media-card__preview">
+                                    <img src="/{{ file.storage_path|trim('/') }}" alt="{{ file.original_filename }}" loading="lazy">
+                                </div>
+                                <div class="media-card__body">
+                                    <h3 class="media-card__title" title="{{ file.original_filename }}">{{ file.original_filename }}</h3>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
             {% if post.created_at %}
                 <div class="sol-form-group">
                     <label for="created_at" class="sol-label">Created at (UTC)</label>
@@ -60,4 +86,30 @@
             <button type="submit" class="sol-btn sol-btn--primary">{{ submit_label }}</button>
         </div>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const contentTextarea = document.getElementById('content');
+            const mediaGrid = document.querySelector('.media-grid');
+
+            if (contentTextarea && mediaGrid) {
+                mediaGrid.addEventListener('click', function (event) {
+                    const card = event.target.closest('.media-card');
+                    if (card) {
+                        const url = card.dataset.url;
+                        const alt = card.dataset.alt;
+                        const markdown = `\n![${alt}](${url})\n`;
+                        
+                        const start = contentTextarea.selectionStart;
+                        const end = contentTextarea.selectionEnd;
+                        
+                        contentTextarea.value = contentTextarea.value.substring(0, start) + markdown + contentTextarea.value.substring(end);
+                        
+                        contentTextarea.selectionStart = contentTextarea.selectionEnd = start + markdown.length;
+                        contentTextarea.focus();
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}
