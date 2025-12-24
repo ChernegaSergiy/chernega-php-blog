@@ -1268,6 +1268,12 @@ ul, ol {
         justify-content: center;
         gap: var(--space-xs);
     }
+
+    .site-header__nav {
+        width: 100%;
+        justify-content: flex-start;
+        margin-top: var(--space-md);
+    }
 }
 
 /* Print styles */
