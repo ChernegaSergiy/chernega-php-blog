@@ -1085,11 +1085,6 @@ ul, ol {
 
 .inline-form { display: inline; }
 
-.site-header__nav-link--active {
-    color: var(--color-primary);
-    text-decoration: underline;
-}
-
 .site-header__nav-user {
     margin-left: var(--space-sm);
     color: var(--base01);
@@ -1203,7 +1198,8 @@ ul, ol {
 /* ==========================================================================
    CONTENT-SPECIFIC STYLES
    ========================================================================== */
-.post-content img {
+.post-content img,
+.sol-card__body img {
     max-width: 100%;
     height: auto;
     display: block;
