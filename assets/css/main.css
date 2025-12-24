@@ -261,6 +261,9 @@ h6::before { content: "###### "; }
     text-transform: uppercase;
     letter-spacing: 2px;
     border-bottom: none;
+    display: block;
+    max-width: 100%;
+    word-break: break-all;
 }
 
 .site-header__title:hover {
