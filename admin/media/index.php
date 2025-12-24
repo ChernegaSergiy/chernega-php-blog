@@ -15,7 +15,7 @@ $offset = isset($_GET['offset']) ? max(0, (int) $_GET['offset']) : 0;
 $mediaFiles = $db->getMediaFiles($limit, $offset);
 $mediaFiles = array_map(static function (array $file) {
     $file['size_human'] = formatBytes((int) $file['size_bytes']);
-    $file['url'] = '/uploads/media/' . ltrim($file['storage_path'], '/');
+    $file['url'] = '/' . ltrim($file['storage_path'], '/');
 
     return $file;
 }, $mediaFiles);
