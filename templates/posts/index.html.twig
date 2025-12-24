@@ -25,7 +25,7 @@
         </div>
     {% else %}
         {% for post in posts %}
-            <article class="sol-card sol-card--interactive" onclick="window.location.href='{{ post.url }}';">
+            <article class="sol-card sol-card--interactive">
                 <div class="sol-card__header">
                     <a href="{{ post.url }}">
                         {{ post.title }}
