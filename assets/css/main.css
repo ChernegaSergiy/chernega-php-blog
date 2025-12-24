@@ -285,6 +285,8 @@ h6::before { content: "###### "; }
 .site-header__nav {
     display: flex;
     gap: var(--space-md);
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .site-header__nav-link {
