@@ -53,11 +53,12 @@ function twig(): Environment
         return $twig;
     }
 
-    // Attempt to load Composer autoloader when available
+    // Load Composer autoloader
     $autoloadPath = __DIR__ . '/vendor/autoload.php';
-    if (file_exists($autoloadPath)) {
-        require_once $autoloadPath;
+    if (! file_exists($autoloadPath)) {
+        throw new RuntimeException('Composer dependencies not installed. Run "composer install".');
     }
+    require_once $autoloadPath;
 
     if (! class_exists(Environment::class)) {
         throw new RuntimeException('Twig dependency not found. Install via "composer require twig/twig".');

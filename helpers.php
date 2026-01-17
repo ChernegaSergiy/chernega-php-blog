@@ -7,9 +7,6 @@ function markdownParser(): Parsedown
 {
     static $parsedown = null;
     if (null === $parsedown) {
-        if (! class_exists(Parsedown::class)) {
-            require_once __DIR__ . '/Parsedown.php';
-        }
         $parsedown = new Parsedown();
         $parsedown->setSafeMode(true);
     }
