@@ -15,18 +15,24 @@ class AdminPostController extends AbstractController
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $em): Response
     {
-        // TODO: Implement form and logic
         return $this->render('admin/post_form.html.twig', [
             'post' => new Post(),
+            'nav_active' => 'create',
+            'form_title' => 'Create Post',
+            'submit_label' => 'Create',
+            'errors' => []
         ]);
     }
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Post $post, EntityManagerInterface $em): Response
     {
-        // TODO: Implement form and logic
         return $this->render('admin/post_form.html.twig', [
             'post' => $post,
+            'nav_active' => 'dashboard',
+            'form_title' => 'Edit Post',
+            'submit_label' => 'Update',
+            'errors' => []
         ]);
     }
 
