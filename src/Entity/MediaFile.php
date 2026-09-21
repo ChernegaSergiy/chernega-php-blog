@@ -35,7 +35,7 @@ class MediaFile
     #[ORM\Column(nullable: true)]
     private ?int $height = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private \DateTimeInterface $created_at;
     public function __construct()
     {
@@ -43,7 +43,7 @@ class MediaFile
         $this->updated_at = new \DateTimeImmutable();
     }
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private \DateTimeInterface $updated_at;
 
     public function getId(): ?int

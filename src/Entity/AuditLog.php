@@ -33,7 +33,7 @@ class AuditLog
     #[ORM\Column(length: 45, nullable: true)]
     private ?string $ip_address = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private \DateTimeInterface $created_at;
 
     public function __construct()
