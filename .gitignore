@@ -1,3 +1,4 @@
+/data/blog.db
 
 ###> symfony/framework-bundle ###
 /.env.local
