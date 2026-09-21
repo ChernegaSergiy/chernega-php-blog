@@ -13,16 +13,16 @@
         {% for post in posts %}
             <article class="sol-card sol-card--interactive">
                 <div class="sol-card__header">
-                    <a href="{{ post.url }}">
+                    <a href="{{ path('app_post_show', {slug: post.slug}) }}">
                         {{ post.title }}
                     </a>
                 </div>
                 <div class="sol-card__body">
-                    <p>{{ post.preview_html|raw }}</p>
+                    <p>{{ post.content|markdown_to_html|striptags|slice(0, 200) ~ '...' }}</p>
                 </div>
                 <div class="sol-card__footer text-sm text-muted">
-                    <span>{{ post.date }}</span> |
-                    <span>category: <a href="{{ post.category_url }}">{{ post.category }}</a></span>
+                    <span>{{ post.createdAt|date('d.m.Y') }}</span> |
+                    <span>category: <a href="{{ path('app_post_index', {category: post.category}) }}">{{ post.category }}</a></span>
                 </div>
             </article>
         {% endfor %}
@@ -30,7 +30,7 @@
 
     {% if show_all_posts_link %}
         <div class="sol-text-center sol-mt-lg">
-            <a href="/posts.php" class="sol-btn sol-btn--primary sol-btn--outline">Переглянути всі дописи</a>
+            <a href="{{ path('app_post_index') }}" class="sol-btn sol-btn--primary sol-btn--outline">Переглянути всі дописи</a>
         </div>
     {% endif %}
 {% endblock %}
