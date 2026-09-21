@@ -20,7 +20,7 @@
         <div class="sol-card__header sol-flex sol-flex--between sol-flex--center">
             <span>Posts</span>
             {% if can_edit_content %}
-                <a href="/admin/posts/create.php" class="sol-btn sol-btn--primary">Create post</a>
+                <a href="{{ path('app_admin_post_create') }}" class="sol-btn sol-btn--primary">Create post</a>
             {% endif %}
         </div>
         <div class="sol-card__body">
@@ -49,11 +49,11 @@
                                 <td>{{ post.updatedAt|date('Y-m-d H:i') }}</td>
                                 {% if can_edit_content %}
                                     <td class="sol-text-right sol-space-x-sm">
-                                        <a href="/admin/posts/edit.php?id={{ post.id }}" class="sol-btn sol-btn--sm">Edit</a>
+                                        <a href="{{ path('app_admin_post_edit', { id: post.id }) }}" class="sol-btn sol-btn--sm">Edit</a>
                                         {% if is_super_admin %}
-                                            <form method="post" action="/admin/posts/delete.php" class="inline-form" onsubmit="return confirm('Delete this post?');">
+                                            <form method="post" action="{{ path('app_admin_post_delete', { id: post.id }) }}" class="inline-form" onsubmit="return confirm('Delete this post?');">
                                                 <input type="hidden" name="id" value="{{ post.id }}">
-                                                <input type="hidden" name="_token" value="{{ csrf_token('delete_post') }}">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete_post_' ~ post.id) }}">
                                                 <button type="submit" class="sol-btn sol-btn--sm sol-btn--danger">Delete</button>
                                             </form>
                                         {% endif %}
