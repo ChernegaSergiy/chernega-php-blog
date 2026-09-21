@@ -13,11 +13,11 @@
             <span class="sol-prompt">admin login</span>
         </div>
 
-        {% if flashes %}
-            {% for flash in flashes %}
-                <div class="sol-alert sol-alert--{{ flash.type }} sol-mb-md">{{ flash.message }}</div>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="sol-alert sol-alert--{{ label }} sol-mb-md">{{ message }}</div>
             {% endfor %}
-        {% endif %}
+        {% endfor %}
 
         {% if error %}
             <div class="sol-alert sol-alert--error sol-mb-md">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
