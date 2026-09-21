@@ -144,6 +144,17 @@ class MediaFile
         return $this->updated_at;
     }
 
+    public function getSizeHuman(): string
+    {
+        $bytes = $this->size_bytes;
+        if ($bytes === null) return "0 B";
+        $units = ["B", "KB", "MB", "GB", "TB"];
+        for ($i = 0; $bytes >= 1024 && $i < count($units) - 1; $i++) {
+            $bytes /= 1024;
+        }
+        return round($bytes, 2) . " " . $units[$i];
+    }
+
     public function setUpdatedAt(\DateTimeInterface $updated_at): static
     {
         $this->updated_at = $updated_at;

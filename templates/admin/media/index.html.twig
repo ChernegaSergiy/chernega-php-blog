@@ -10,11 +10,11 @@
         <span class="sol-prompt">admin media library</span>
     </div>
 
-    {% if flashes %}
-        {% for flash in flashes %}
-            <div class="sol-alert sol-alert--{{ flash.type }} sol-mb-md">{{ flash.message }}</div>
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="sol-alert sol-alert--{{ label }} sol-mb-md">{{ message }}</div>
         {% endfor %}
-    {% endif %}
+    {% endfor %}
 
     <div class="sol-card sol-mb-lg media-summary">
         <div class="sol-card__body sol-flex sol-flex--between sol-flex--center">
@@ -46,8 +46,8 @@
                     <a href="{{ pagination.next_url }}" class="sol-btn sol-btn--secondary sol-btn--outline">Next</a>
                 {% endif %}
                 {% if is_super_admin %}
-                    <form method="post" action="/admin/media/cleanup.php" class="inline-form" onsubmit="return confirm('Run housekeeping now?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token }}">
+                    <form method="post" action="{{ path('app_admin_media_cleanup') }}" class="inline-form" onsubmit="return confirm('Run housekeeping now?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('media') }}">
                         <input type="hidden" name="limit" value="{{ media_stats.limit }}">
                         <input type="hidden" name="offset" value="{{ media_stats.offset }}">
                         <button type="submit" class="sol-btn sol-btn--danger sol-btn--outline">Housekeeping</button>
@@ -58,7 +58,7 @@
     </div>
 
     {% if can_manage_media %}
-        <form class="sol-card sol-mb-lg" method="post" action="/admin/media/upload.php" enctype="multipart/form-data">
+        <form class="sol-card sol-mb-lg" method="post" action="{{ path('app_admin_media_upload') }}" enctype="multipart/form-data">
             <div class="sol-card__header">Upload media</div>
             <div class="sol-card__body sol-grid">
                 <div class="sol-form-group sol-col-md-6">
@@ -67,7 +67,7 @@
                 </div>
                 <div class="sol-form-group sol-col-md-6">
                     <label for="media_limit" class="sol-label">Items per page</label>
-                    <select id="media_limit" class="sol-input" onchange="location.href='/admin/media/index.php?limit=' + this.value" aria-label="Items per page">
+                    <select id="media_limit" class="sol-input" onchange="location.href='{{ path('app_admin_media_index') }}?limit=' + this.value" aria-label="Items per page">
                         {% for option in [12, 24, 30, 60, 120] %}
                             <option value="{{ option }}" {% if option == media_stats.limit %}selected{% endif %}>{{ option }}</option>
                         {% endfor %}
@@ -79,7 +79,7 @@
                 </div>
             </div>
             <div class="sol-card__footer sol-text-right">
-                <input type="hidden" name="_token" value="{{ csrf_token }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('media') }}">
                 <input type="hidden" name="media_limit" value="{{ media_stats.limit }}">
                 <button type="submit" class="sol-btn sol-btn--primary">Upload</button>
             </div>
@@ -96,19 +96,19 @@
                     {% for file in media_files %}
                         <article class="media-card">
                             <div class="media-card__preview">
-                                <img src="{{ file.url }}" alt="{{ file.original_filename }}" loading="lazy">
+                                <img src="{{ '/' ~ file.storagePath|trim('/') }}" alt="{{ file.originalFilename }}" loading="lazy">
                             </div>
                             <div class="media-card__body">
-                                <h3 class="media-card__title" title="{{ file.original_filename }}">{{ file.original_filename }}</h3>
-                                <p class="media-card__meta">{{ file.mime_type }} · {{ file.size_human }}{% if file.width %} · {{ file.width }}×{{ file.height }}px{% endif %}</p>
-                                <p class="media-card__meta">Uploaded {{ file.created_at }}</p>
+                                <h3 class="media-card__title" title="{{ file.originalFilename }}">{{ file.originalFilename }}</h3>
+                                <p class="media-card__meta">{{ file.mimeType }} · {{ file.sizeHuman }}{% if file.width %} · {{ file.width }}×{{ file.height }}px{% endif %}</p>
+                                <p class="media-card__meta">Uploaded {{ file.createdAt|date('Y-m-d H:i') }}</p>
                                 <div class="media-card__actions">
-                                    <a href="{{ file.url }}" class="sol-btn sol-btn--sm" target="_blank" rel="noopener">Open</a>
-                                    <button type="button" class="sol-btn sol-btn--sm sol-btn--secondary" data-copy-url="{{ file.url }}">Copy URL</button>
+                                    <a href="{{ '/' ~ file.storagePath|trim('/') }}" class="sol-btn sol-btn--sm" target="_blank" rel="noopener">Open</a>
+                                    <button type="button" class="sol-btn sol-btn--sm sol-btn--secondary" data-copy-url="{{ '/' ~ file.storagePath|trim('/') }}">Copy URL</button>
                                     {% if can_manage_media %}
-                                        <form method="post" action="/admin/media/delete.php" class="inline-form" onsubmit="return confirm('Delete this media item?');">
+                                        <form method="post" action="{{ path('app_admin_media_delete', { id: file.id }) }}" class="inline-form" onsubmit="return confirm('Delete this media item?');">
                                             <input type="hidden" name="id" value="{{ file.id }}">
-                                            <input type="hidden" name="_token" value="{{ csrf_token }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('media') }}">
                                             <input type="hidden" name="limit" value="{{ media_stats.limit }}">
                                             <input type="hidden" name="offset" value="{{ media_stats.offset }}">
                                             <button type="submit" class="sol-btn sol-btn--sm sol-btn--danger">Delete</button>
