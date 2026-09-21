@@ -7,11 +7,11 @@
         <span class="sol-prompt">admin configure site_settings</span>
     </div>
 
-    {% if flashes %}
-        {% for flash in flashes %}
-            <div class="sol-alert sol-alert--{{ flash.type }}">{{ flash.message }}</div>
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="sol-alert sol-alert--{{ label }}">{{ message }}</div>
         {% endfor %}
-    {% endif %}
+    {% endfor %}
 
     {% if errors %}
         <div class="sol-alert sol-alert--error sol-mb-md">
