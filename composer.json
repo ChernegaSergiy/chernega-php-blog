@@ -7,13 +7,15 @@
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "league/commonmark": "*",
         "symfony/console": "8.1.*",
         "symfony/dotenv": "8.1.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "8.1.*",
         "symfony/runtime": "8.1.*",
         "symfony/webapp-pack": "*",
-        "symfony/yaml": "8.1.*"
+        "symfony/yaml": "8.1.*",
+        "twig/markdown-extra": "*"
     },
     "config": {
         "allow-plugins": {
