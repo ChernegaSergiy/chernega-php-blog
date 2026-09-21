@@ -21,7 +21,6 @@ class AdminController extends AbstractController
         return $this->render('admin/dashboard.html.twig', [
             'posts' => $posts,
             'audit_logs' => $auditLogs,
-            'current_admin' => $this->getUser(),
         ]);
     }
 }

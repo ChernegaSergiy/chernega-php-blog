@@ -1,7 +1,7 @@
 {% extends 'admin/base.html.twig' %}
 
 {% set admin_nav_active = 'dashboard' %}
-{% set current_role = current_admin.role|default('viewer') %}
+{% set current_role = app.user.role|default('viewer') %}
 {% set can_edit_content = current_role in ['editor', 'admin'] %}
 {% set is_super_admin = current_role == 'admin' %}
 

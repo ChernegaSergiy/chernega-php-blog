@@ -19,7 +19,7 @@ class AdminMediaController extends AbstractController
         $totalSize = array_reduce($files, fn($sum, $f) => $sum + $f->getSizeBytes(), 0);
 
         return $this->render('admin/media/index.html.twig', [
-            'files' => $files,
+            'media_files' => $files,
             'media_stats' => [
                 'total_count' => count($files),
                 'limit' => 50,
