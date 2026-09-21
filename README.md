@@ -28,7 +28,7 @@ This directory contains the full PHP codebase powering **chernega.eu.org**, buil
 ## Directory Layout
 
 ```text
-/
+chernega-php-blog/
 +-- assets/      # Frontend source assets (CSS, JS)
 +-- bin/         # Symfony console
 +-- config/      # Framework configuration files
