@@ -16,12 +16,4 @@ class ToolsController extends AbstractController
             'page_title' => 'Mermaid Live Editor',
         ]);
     }
-
-    #[Route('/ul-generator', name: 'ul_generator', methods: ['GET'])]
-    public function ulGenerator(): Response
-    {
-        return $this->render('tools/license-generator.html.twig', [
-            'page_title' => 'CSSM Unlimited License Generator', 'current_year' => date('Y'), 'default_holder' => 'Сергій Чернега',
-        ]);
-    }
 }

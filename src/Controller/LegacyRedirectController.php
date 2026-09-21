@@ -20,7 +20,7 @@ class LegacyRedirectController extends AbstractController
     #[Route('/ul-generator.php', name: 'app_legacy_ul', methods: ['GET'])]
     public function ulRedirect(): Response
     {
-        return $this->redirectToRoute('app_tools_ul_generator', [], Response::HTTP_MOVED_PERMANENTLY);
+        return $this->redirectToRoute('app_home', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     #[Route('/posts.php', name: 'app_legacy_posts', methods: ['GET'])]

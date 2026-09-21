@@ -26,7 +26,6 @@ class SiteExtension extends AbstractExtension implements GlobalsInterface
                     ['url' => '/about', 'label' => 'about'],
                     ['url' => '/posts', 'label' => 'posts'],
                     ['url' => '/tools/mermaid', 'label' => 'mermaid'],
-                    ['url' => '/tools/ul-generator', 'label' => 'ul-generator'],
                 ]
             ]
         ];
