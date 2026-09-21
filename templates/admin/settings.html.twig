@@ -42,6 +42,6 @@
             <a href="/admin/" class="sol-btn sol-btn--secondary sol-btn--outline">Cancel</a>
             <button type="submit" class="sol-btn sol-btn--primary">Save settings</button>
         </div>
-        <input type="hidden" name="_token" value="{{ csrf_token }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('settings') }}">
     </form>
 {% endblock %}

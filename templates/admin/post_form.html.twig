@@ -79,7 +79,7 @@
                     <input type="datetime-local" id="created_at" name="created_at" class="sol-input" value="{{ post.created_at_local }}">
                 </div>
             {% endif %}
-            <input type="hidden" name="_token" value="{{ csrf_token }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('post_form') }}">
         </div>
         <div class="sol-card__footer sol-flex sol-flex--between">
             <a href="/admin/" class="sol-btn sol-btn--secondary sol-btn--outline">Cancel</a>
