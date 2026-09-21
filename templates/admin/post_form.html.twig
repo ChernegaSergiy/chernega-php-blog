@@ -37,15 +37,15 @@
                     </div>
                     <div class="sol-form-group">
                         <label for="meta_title" class="sol-label">Meta title</label>
-                        <input type="text" id="meta_title" name="meta_title" class="sol-input" value="{{ post.meta_title }}">
+                        <input type="text" id="meta_title" name="meta_title" class="sol-input" value="{{ post.metaTitle }}">
                     </div>
                     <div class="sol-form-group">
                         <label for="meta_description" class="sol-label">Meta description</label>
-                        <textarea id="meta_description" name="meta_description" class="sol-textarea" rows="3">{{ post.meta_description }}</textarea>
+                        <textarea id="meta_description" name="meta_description" class="sol-textarea" rows="3">{{ post.metaDescription }}</textarea>
                     </div>
                     <div class="sol-form-group">
                         <label for="article_image" class="sol-label">Article image URL</label>
-                        <input type="text" id="article_image" name="article_image" class="sol-input" value="{{ post.article_image }}" placeholder="Relative or absolute URL">
+                        <input type="text" id="article_image" name="article_image" class="sol-input" value="{{ post.articleImage }}" placeholder="Relative or absolute URL">
                     </div>
                 </div>
             </div>
@@ -73,10 +73,10 @@
                 </div>
             {% endif %}
 
-            {% if post.created_at %}
+            {% if post.createdAt %}
                 <div class="sol-form-group">
                     <label for="created_at" class="sol-label">Created at (UTC)</label>
-                    <input type="datetime-local" id="created_at" name="created_at" class="sol-input" value="{{ post.created_at_local }}">
+                    <input type="datetime-local" id="created_at" name="created_at" class="sol-input" value="{{ post.createdAt.format('Y-m-d\TH:i') }}">
                 </div>
             {% endif %}
             <input type="hidden" name="_token" value="{{ csrf_token('post_form') }}">
