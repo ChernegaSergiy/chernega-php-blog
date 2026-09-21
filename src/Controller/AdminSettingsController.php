@@ -18,7 +18,7 @@ class AdminSettingsController extends AbstractController
         $settingsRaw = $em->getRepository(Setting::class)->findAll();
         $settings = [];
         foreach ($settingsRaw as $setting) {
-            $settings[$setting->getSettingKey()] = $setting->getSettingValue();
+            $settings[$setting->getSettingName()] = $setting->getSettingValue();
         }
 
         return $this->render('admin/settings.html.twig', [
