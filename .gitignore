@@ -1,25 +1,10 @@
-# Operating Systems
-.DS_Store
-Thumbs.db
 
-# Development Environments
-.vscode/
-.idea/
-*.swp
-
-# Runtime Artifacts
-*.log
-*.tmp
-*.bak
-
-# Dependencies
-vendor/
-
-# Configuration & Secrets
-.env
-.env.local
-.env.*.local
-
-# Data Storage
-data/
-uploads/
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
