@@ -85,10 +85,6 @@
     padding: 0;
 }
 
-html, body {
-    height: 100%;
-}
-
 body {
     background-color: var(--color-background);
     color: var(--color-text-primary);
