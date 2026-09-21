@@ -45,8 +45,8 @@
                                 <td>{{ post.id }}</td>
                                 <td>{{ post.title }}</td>
                                 <td>{{ post.category }}</td>
-                                <td>{{ post.created_at|date('Y-m-d H:i') }}</td>
-                                <td>{{ post.updated_at|date('Y-m-d H:i') }}</td>
+                                <td>{{ post.createdAt|date('Y-m-d H:i') }}</td>
+                                <td>{{ post.updatedAt|date('Y-m-d H:i') }}</td>
                                 {% if can_edit_content %}
                                     <td class="sol-text-right sol-space-x-sm">
                                         <a href="/admin/posts/edit.php?id={{ post.id }}" class="sol-btn sol-btn--sm">Edit</a>
@@ -90,11 +90,11 @@
                             <tbody>
                             {% for log in audit_logs %}
                                 <tr>
-                                    <td>{{ log.created_at|date('Y-m-d H:i') }}</td>
-                                    <td>{{ log.username ?? 'system' }}</td>
+                                    <td>{{ log.createdAt|date('Y-m-d H:i') }}</td>
+                                    <td>{{ log.admin.username ?? 'system' }}</td>
                                     <td>{{ log.action }}</td>
-                                    <td>{{ log.entity_type ? log.entity_type ~ (log.entity_id ? ' #' ~ log.entity_id : '') : '—' }}</td>
-                                    <td>{{ log.ip_address ?: '—' }}</td>
+                                    <td>{{ log.entityType ? log.entityType ~ (log.entityId ? ' #' ~ log.entityId : '') : '—' }}</td>
+                                    <td>{{ log.ipAddress ?: '—' }}</td>
                                     <td><code>{{ log.metadata ?: '{}' }}</code></td>
                                 </tr>
                             {% endfor %}
