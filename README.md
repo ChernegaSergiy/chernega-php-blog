@@ -68,6 +68,11 @@ The application uses Doctrine ORM. To provision the tables:
 php bin/console doctrine:schema:update --force
 ```
 
+After creating the tables, generate your initial administrator account:
+```bash
+php bin/console app:create-admin admin mysecretpassword
+```
+
 ## Running the Application
 
 Use Symfony's local web server from the project directory:
@@ -92,7 +97,7 @@ To serve behind Apache/Nginx, configure the document root to the `public/` direc
 
 ## Admin Panel
 
-- Sign in at `/admin/login` using the credentials defined by your authenticator (defaults: `admin` / `password`).
+- Sign in at `/admin/login` using the credentials you created during setup.
 - After authentication you can create, edit, and delete posts; every action is CSRF-protected and validated before data is persisted.
 - Use `/logout` to terminate the session; Symfony Security handles the session natively.
 
