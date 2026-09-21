@@ -29,15 +29,15 @@ This directory contains the full PHP codebase powering **chernega.eu.org**, buil
 
 ```text
 /
-+-- assets/             # Frontend source assets (CSS, JS)
-+-- bin/                # Symfony console
-+-- config/             # Framework configuration files
-+-- data/               # SQLite database file (`blog.db`)
-+-- public/             # Web root (`index.php`, compiled assets, media)
-|   +-- assets/         # Static CSS, icons, fonts
-|   \-- media/          # Uploaded media directory
-+-- src/                # PHP codebase (Controllers, Entities, Repositories)
-\-- templates/          # Twig templates
++-- assets/      # Frontend source assets (CSS, JS)
++-- bin/         # Symfony console
++-- config/      # Framework configuration files
++-- data/        # SQLite database file (`blog.db`)
++-- public/      # Web root (`index.php`, compiled assets, media)
+|   +-- assets/  # Static CSS, icons, fonts
+|   \-- media/   # Uploaded media directory
++-- src/         # PHP codebase (Controllers, Entities, Repositories)
+\-- templates/   # Twig templates
 ```
 
 Static assets live under `assets/` (CSS, JS, fonts). Iconography resides in `assets/icons/`, while PWA metadata is grouped under `assets/manifest/`.
