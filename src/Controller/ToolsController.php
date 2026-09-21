@@ -21,7 +21,7 @@ class ToolsController extends AbstractController
     public function ulGenerator(): Response
     {
         return $this->render('tools/license-generator.html.twig', [
-            'page_title' => 'CSSM Unlimited License Generator',
+            'page_title' => 'CSSM Unlimited License Generator', 'current_year' => date('Y'), 'default_holder' => 'Сергій Чернега',
         ]);
     }
 }
