@@ -23,6 +23,7 @@ class AdminMediaController extends AbstractController
             'media_stats' => [
                 'total_count' => count($files),
                 'limit' => 50,
+                'offset' => 0,
                 'total_size_human' => round($totalSize / 1024 / 1024, 2) . ' MB'
             ],
             'pagination' => [
