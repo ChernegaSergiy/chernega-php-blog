@@ -22,10 +22,19 @@ class AdminSettingsController extends AbstractController
                 $repo = $em->getRepository(Setting::class);
                 
                 $blogTitle = $request->request->get('blog_title');
+                $footerText = $request->request->get('footer_text');
                 $postsPerPage = $request->request->get('posts_per_page');
                 
                 $titleSetting = $repo->findOneBy(['setting_name' => 'blog_title']);
                 if ($titleSetting) $titleSetting->setSettingValue($blogTitle);
+                
+                $footerSetting = $repo->findOneBy(['setting_name' => 'footer_text']);
+                if (!$footerSetting) {
+                    $footerSetting = new Setting();
+                    $footerSetting->setSettingName('footer_text');
+                    $em->persist($footerSetting);
+                }
+                $footerSetting->setSettingValue($footerText);
                 
                 $limitSetting = $repo->findOneBy(['setting_name' => 'posts_per_page']);
                 if ($limitSetting) $limitSetting->setSettingValue($postsPerPage);

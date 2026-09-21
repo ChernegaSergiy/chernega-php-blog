@@ -16,11 +16,12 @@ class SiteExtension extends AbstractExtension implements GlobalsInterface
         $repo = $this->em->getRepository(Setting::class);
         
         $title = $repo->findOneBy(['setting_name' => 'blog_title'])?->getSettingValue() ?? '~/chernega.blog';
+        $footer = $repo->findOneBy(['setting_name' => 'footer_text'])?->getSettingValue() ?? '© ' . date('Y') . ' Мій Блог';
 
         return [
             'site' => [
                 'title' => $title,
-                'footer' => '© ' . date('Y') . ' Мій Блог',
+                'footer' => $footer,
                 'navigation' => [
                     ['url' => '/about', 'label' => 'about'],
                     ['url' => '/posts', 'label' => 'posts'],
