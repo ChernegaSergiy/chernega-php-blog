@@ -23,9 +23,9 @@ class SiteExtension extends AbstractExtension implements GlobalsInterface
                 'title' => $title,
                 'footer' => $footer,
                 'navigation' => [
-                    ['url' => '/about', 'label' => 'about'],
                     ['url' => '/posts', 'label' => 'posts'],
-                    ['url' => '/tools/mermaid', 'label' => 'mermaid'],
+                    ['url' => '/about', 'label' => 'about'],
+                    ['url' => '/contact', 'label' => 'contact'],
                 ]
             ]
         ];
