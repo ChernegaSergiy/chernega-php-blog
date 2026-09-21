@@ -10,10 +10,10 @@
         <a href="/admin/" class="site-header__nav-link {{ admin_nav_active == 'dashboard' ? 'active' : '' }}">dashboard</a>
         {% if can_edit_content %}
             <a href="{{ path('app_admin_post_create') }}" class="site-header__nav-link {{ admin_nav_active == 'create' ? 'active' : '' }}">create</a>
-            <a href="/admin/media/index.php" class="site-header__nav-link {{ admin_nav_active == 'media' ? 'active' : '' }}">media</a>
+            <a href="{{ path('app_admin_media_index') }}" class="site-header__nav-link {{ admin_nav_active == 'media' ? 'active' : '' }}">media</a>
         {% endif %}
         {% if is_super_admin %}
-            <a href="/admin/settings.php" class="site-header__nav-link {{ admin_nav_active == 'settings' ? 'active' : '' }}">settings</a>
+            <a href="{{ path('app_admin_settings_index') }}" class="site-header__nav-link {{ admin_nav_active == 'settings' ? 'active' : '' }}">settings</a>
         {% endif %}
         <a href="/" class="site-header__nav-link" target="_blank" rel="noopener">view site</a>
         <a href="{{ path('app_logout') }}" class="site-header__nav-link">logout</a>

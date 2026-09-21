@@ -60,12 +60,12 @@
                     <div class="sol-card__header">Recent Media</div>
                     <div class="sol-card__body media-grid">
                         {% for file in recent_media %}
-                            <article class="media-card" data-url="/{{ file.storage_path|trim('/') }}" data-alt="{{ file.original_filename|escape('html_attr') }}" style="cursor: pointer;">
+                            <article class="media-card" data-url="/{{ file.storagePath|trim('/') }}" data-alt="{{ file.originalFilename|escape('html_attr') }}" style="cursor: pointer;">
                                 <div class="media-card__preview">
-                                    <img src="/{{ file.storage_path|trim('/') }}" alt="{{ file.original_filename }}" loading="lazy">
+                                    <img src="/{{ file.storagePath|trim('/') }}" alt="{{ file.originalFilename }}" loading="lazy">
                                 </div>
                                 <div class="media-card__body">
-                                    <h3 class="media-card__title" title="{{ file.original_filename }}">{{ file.original_filename }}</h3>
+                                    <h3 class="media-card__title" title="{{ file.originalFilename }}">{{ file.originalFilename }}</h3>
                                 </div>
                             </article>
                         {% endfor %}
