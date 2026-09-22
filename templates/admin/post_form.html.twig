@@ -74,7 +74,7 @@
             {% endif %}
 
             {% if post.createdAt %}
-                <div class="sol-form-group">
+                <div class="sol-form-group sol-mt-md">
                     <label for="created_at" class="sol-label">Created at (UTC)</label>
                     <input type="datetime-local" id="created_at" name="created_at" class="sol-input" value="{{ post.createdAt|date('Y-m-d') }}T{{ post.createdAt|date('H:i') }}">
                 </div>
