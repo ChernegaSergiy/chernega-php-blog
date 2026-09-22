@@ -75,6 +75,18 @@ php bin/console app:create-admin admin mysecretpassword
 
 ## Running the Application
 
+### Using Docker (Recommended)
+
+The easiest way to run the application in production or development is using the provided Docker setup (Nginx + PHP-FPM):
+
+```bash
+docker compose up -d --build
+```
+
+The site will be available at <http://localhost:8080>. The database and uploaded files will be securely persisted on your host machine.
+
+### Using Local PHP
+
 Use Symfony's local web server from the project directory:
 ```bash
 symfony serve -d
