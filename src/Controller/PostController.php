@@ -17,8 +17,9 @@ class PostController extends AbstractController
         $search = $request->query->get('search');
         $category = $request->query->get('category');
         $page = max(1, $request->query->getInt('page', 1));
-        // TODO: Get limit from settings
-        $limit = 10;
+        $settingRepo = $entityManager->getRepository(\App\Entity\Setting::class);
+        $limitSetting = $settingRepo->findOneBy(['setting_name' => 'posts_per_page']);
+        $limit = $limitSetting ? (int)$limitSetting->getSettingValue() : 10;
 
         $qb = $entityManager->getRepository(Post::class)->createQueryBuilder('p');
 

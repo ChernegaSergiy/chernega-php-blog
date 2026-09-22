@@ -13,8 +13,11 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(EntityManagerInterface $entityManager): Response
     {
-        // TODO: get limit from settings if available
-        $posts = $entityManager->getRepository(Post::class)->findBy([], ['created_at' => 'DESC'], 5);
+        $settingRepo = $entityManager->getRepository(\App\Entity\Setting::class);
+        $limitSetting = $settingRepo->findOneBy(['setting_name' => 'posts_per_page']);
+        $limit = $limitSetting ? (int)$limitSetting->getSettingValue() : 5;
+
+        $posts = $entityManager->getRepository(Post::class)->findBy([], ['created_at' => 'DESC'], $limit);
         $totalPosts = $entityManager->getRepository(Post::class)->count([]);
 
         return $this->render('home.html.twig', [
