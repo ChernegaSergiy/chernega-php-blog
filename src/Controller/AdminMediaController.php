@@ -57,10 +57,8 @@ class AdminMediaController extends AbstractController
         $slugger = new AsciiSlugger();
         $uploadDir = $this->getParameter('kernel.project_dir') . '/public/media';
         
-        $year = date('Y');
-        $month = date('m');
-        $relativeDir = "{$year}/{$month}";
-        $absoluteDir = "{$uploadDir}/{$relativeDir}";
+        $relativeDir = "";
+        $absoluteDir = $uploadDir;
 
         if (!is_dir($absoluteDir)) {
             mkdir($absoluteDir, 0755, true);
@@ -82,7 +80,7 @@ class AdminMediaController extends AbstractController
                 $media = new MediaFile();
                 $media->setFilename($newFilename);
                 $media->setOriginalFilename($newFilename);
-                $media->setStoragePath("media/{$relativeDir}/{$newFilename}");
+                $media->setStoragePath("media/{$newFilename}");
                 $media->setMimeType($file->getClientMimeType() ?? 'application/octet-stream');
                 $media->setSizeBytes((int) filesize("{$absoluteDir}/{$newFilename}"));
 
