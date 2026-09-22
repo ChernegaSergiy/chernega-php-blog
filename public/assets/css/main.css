@@ -44,7 +44,7 @@
     --color-surface-terminal: var(--base03);
 
     /* Typography */
-    --font-family-mono: 'Courier New', 'Lucida Console', Monaco, monospace;
+    --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, 'Courier New', monospace;
     --font-size-base: 14px;
     --font-size-sm: 12px;
     --font-size-lg: 18px;
