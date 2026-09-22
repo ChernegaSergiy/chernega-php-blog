@@ -11,8 +11,8 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./data:/var/www/html/data
-      - ./public/media:/var/www/html/public/media
+      - ./data:/var/www/html/data:Z
+      - ./public/media:/var/www/html/public/media:Z
     environment:
       - APP_ENV=prod
       - APP_DEBUG=0
