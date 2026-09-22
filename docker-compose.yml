@@ -8,8 +8,6 @@ services:
     image: chernega-blog
     container_name: chernega-blog-app
     restart: unless-stopped
-    ports:
-      - "8080:80"
     volumes:
       - ./data:/var/www/html/data:Z
       - ./public/media:/var/www/html/public/media:Z
@@ -17,3 +15,9 @@ services:
       - APP_ENV=prod
       - APP_DEBUG=0
       - DATABASE_URL=sqlite:///%kernel.project_dir%/data/blog.db
+    networks:
+      - proxy-net
+
+networks:
+  proxy-net:
+    external: true
