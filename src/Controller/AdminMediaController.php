@@ -118,21 +118,72 @@ class AdminMediaController extends AbstractController
 
         $files = $em->getRepository(MediaFile::class)->findAll();
         $projectDir = $this->getParameter('kernel.project_dir');
-        
-        $removed = 0;
+        $mediaRoot = $projectDir . '/public/media';
+
+        // 1. Remove orphaned DB records (record exists, file missing)
+        $removedRecords = 0;
+        $knownPaths = [];
         foreach ($files as $file) {
             $absolutePath = $projectDir . '/public/' . ltrim($file->getStoragePath(), '/');
             if (!file_exists($absolutePath)) {
                 $em->remove($file);
-                $removed++;
+                $removedRecords++;
+            } else {
+                $knownPaths[] = realpath($absolutePath);
             }
         }
 
-        if ($removed > 0) {
+        if ($removedRecords > 0) {
             $em->flush();
-            $this->addFlash('success', "Cleanup finished. Removed {$removed} orphaned database records.");
+        }
+
+        // 2. Remove orphaned disk files (file exists, no DB record)
+        $removedFiles = 0;
+        if (is_dir($mediaRoot)) {
+            $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($mediaRoot, \FilesystemIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::CHILD_FIRST
+            );
+
+            foreach ($iterator as $item) {
+                if ($item->isFile()) {
+                    $realPath = $item->getRealPath();
+                    if (!in_array($realPath, $knownPaths, true)) {
+                        @unlink($realPath);
+                        $removedFiles++;
+                    }
+                }
+            }
+
+            // 3. Remove empty directories
+            $dirs = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($mediaRoot, \FilesystemIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::CHILD_FIRST
+            );
+
+            foreach ($dirs as $dir) {
+                if ($dir->isDir()) {
+                    $dirPath = $dir->getRealPath();
+                    if ($dirPath !== realpath($mediaRoot) && count(scandir($dirPath)) === 2) {
+                        @rmdir($dirPath);
+                    }
+                }
+            }
+        }
+
+        // Build summary message
+        $parts = [];
+        if ($removedRecords > 0) {
+            $parts[] = "removed {$removedRecords} orphaned DB record(s)";
+        }
+        if ($removedFiles > 0) {
+            $parts[] = "deleted {$removedFiles} orphaned file(s) from disk";
+        }
+
+        if (!empty($parts)) {
+            $this->addFlash('success', 'Cleanup finished: ' . implode(', ', $parts) . '.');
         } else {
-            $this->addFlash('success', "Cleanup finished. No orphaned records found.");
+            $this->addFlash('success', 'Cleanup finished. Everything is clean, no orphans found.');
         }
 
         return $this->redirectToRoute('app_admin_media_index');
