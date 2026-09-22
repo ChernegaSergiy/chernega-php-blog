@@ -656,31 +656,32 @@ h6::before { content: "###### "; }
 /* ==========================================================================
    COMPONENT: TABLES
    ========================================================================== */
-.sol-table {
+.sol-table, .post-content table {
     width: 100%;
     border-collapse: collapse;
     border: var(--border-width-thick) solid var(--color-text-primary);
+    margin-bottom: var(--space-md);
 }
 
-.sol-table th,
-.sol-table td {
+.sol-table th, .post-content table th,
+.sol-table td, .post-content table td {
     border: var(--border-width-base) solid var(--color-text-primary);
     padding: var(--space-sm);
     text-align: left;
 }
 
-.sol-table th {
+.sol-table th, .post-content table th {
     background-color: var(--color-text-primary);
     color: var(--color-background);
     text-transform: uppercase;
     font-weight: bold;
 }
 
-.sol-table tr:nth-child(even) {
+.sol-table tr:nth-child(even), .post-content table tr:nth-child(even) {
     background-color: var(--color-surface);
 }
 
-.sol-table tr:hover {
+.sol-table tr:hover, .post-content table tr:hover {
     background-color: var(--color-text-secondary);
     color: var(--color-surface-elevated);
 }
