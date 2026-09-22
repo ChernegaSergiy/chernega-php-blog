@@ -36,4 +36,6 @@ RUN chown -R www-data:www-data /var/www/html/var /var/www/html/data /var/www/htm
 EXPOSE 80
 
 # Start Supervisor (which will start Nginx and PHP-FPM)
+COPY docker/entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
