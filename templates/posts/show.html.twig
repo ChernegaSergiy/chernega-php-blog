@@ -31,7 +31,7 @@
         {% endif %}
 
         <div class="sol-mb-md">
-            <h2>{{ post.title }}</h2>
+            <h1>{{ post.title }}</h1>
             <div class="text-sm text-muted">
                 <span>{{ post.createdAt|date('d.m.Y') }}</span> |
                 <span>category: <a href="{{ path('app_post_index', {category: post.category}) }}">{{ post.category }}</a></span>
