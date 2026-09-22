@@ -74,8 +74,7 @@ class AdminMediaController extends AbstractController
             }
 
             $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = strtolower($slugger->slug($originalFilename)->toString());
-            $newFilename = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
+            $newFilename = bin2hex(random_bytes(8)) . '.' . $file->guessExtension();
 
             try {
                 $file->move($absoluteDir, $newFilename);
