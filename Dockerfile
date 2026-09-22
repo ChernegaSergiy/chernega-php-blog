@@ -29,7 +29,8 @@ COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/supervisord.conf /etc/supervisord.conf
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html/var /var/www/html/data /var/www/html/public/media \
+RUN mkdir -p /var/www/html/var /var/www/html/data /var/www/html/public/media \
+    && chown -R www-data:www-data /var/www/html/var /var/www/html/data /var/www/html/public/media \
     && chmod -R 775 /var/www/html/var /var/www/html/data /var/www/html/public/media
 
 # Expose port 80
