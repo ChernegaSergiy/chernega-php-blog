@@ -19,6 +19,7 @@ WORKDIR /var/www/html
 COPY . .
 
 # Install PHP dependencies
+ENV APP_ENV=prod
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Setup Nginx configuration
