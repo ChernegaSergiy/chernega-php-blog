@@ -5,16 +5,16 @@
 
 This directory contains the full PHP codebase powering **chernega.eu.org**, built around Twig templates. The code base powers a markdown-backed blog with SQLite persistence, auxiliary tools, and a minimalist terminal-inspired UI.
 
-## Key Features
+## Features
 
-- **Twig templating** with a shared base layout and structured page templates.
-- **Admin panel** for creating, updating, and deleting posts through a secure dashboard.
-- **Role-aware access control** with granular permissions (viewer, editor, admin) and detailed audit logging.
-- **Media library** featuring optimized image uploads, automated housekeeping, and quick clipboard-ready URLs.
-- **SQLite-backed blog engine** with configurable posts-per-page and category filtering.
-- **Markdown authoring pipeline** via Parsedown for safe HTML rendering.
-- **Utility pages** including a Mermaid.js diagram visualiser and CSSM Unlimited License generator.
-- **Structured helper layer** for preview rendering, date localisation (UTC → Europe/Kiev), and template data mapping.
+- **Twig Templating:** Uses a shared base layout and structured page templates.
+- **Admin Panel:** Allows creating, updating, and deleting posts through a secure dashboard.
+- **Role-aware Access Control:** Provides granular permissions (viewer, editor, admin) and detailed audit logging.
+- **Media Library:** Features optimized image uploads, automated housekeeping, and quick clipboard-ready URLs.
+- **SQLite-backed Blog Engine:** Includes configurable posts-per-page and category filtering.
+- **Markdown Authoring Pipeline:** Uses Parsedown for safe HTML rendering.
+- **Utility Pages:** Includes a Mermaid.js diagram visualiser and CSSM Unlimited License generator.
+- **Structured Helper Layer:** Handles preview rendering, date localisation (UTC → Europe/Kiev), and template data mapping.
 
 ## Requirements
 
