@@ -1,6 +1,7 @@
 # chernega.eu.org Web Stack
 
 [![Better Stack Badge](https://uptime.betterstack.com/status-badges/v2/monitor/255i1.svg)](https://uptime.betterstack.com/?utm_source=status_badge)
+[![Docker Image CI](https://github.com/ChernegaSergiy/chernega-php-blog/actions/workflows/docker-image.yml/badge.svg)](https://github.com/ChernegaSergiy/chernega-php-blog/actions/workflows/docker-image.yml)
 
 This directory contains the full PHP codebase powering **chernega.eu.org**, built around Twig templates. The code base powers a markdown-backed blog with SQLite persistence, auxiliary tools, and a minimalist terminal-inspired UI.
 
