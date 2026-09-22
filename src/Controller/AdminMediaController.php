@@ -57,8 +57,10 @@ class AdminMediaController extends AbstractController
         $slugger = new AsciiSlugger();
         $uploadDir = $this->getParameter('kernel.project_dir') . '/public/media';
         
-        $relativeDir = "";
-        $absoluteDir = $uploadDir;
+        $year = date('Y');
+        $month = date('m');
+        $relativeDir = "{$year}/{$month}";
+        $absoluteDir = "{$uploadDir}/{$relativeDir}";
 
         if (!is_dir($absoluteDir)) {
             mkdir($absoluteDir, 0755, true);
