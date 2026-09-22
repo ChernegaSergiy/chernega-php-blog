@@ -81,7 +81,7 @@ class AdminMediaController extends AbstractController
 
                 $media = new MediaFile();
                 $media->setFilename($newFilename);
-                $media->setOriginalFilename($file->getClientOriginalName());
+                $media->setOriginalFilename($newFilename);
                 $media->setStoragePath("media/{$relativeDir}/{$newFilename}");
                 $media->setMimeType($file->getClientMimeType() ?? 'application/octet-stream');
                 $media->setSizeBytes((int) filesize("{$absoluteDir}/{$newFilename}"));
