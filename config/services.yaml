@@ -31,7 +31,6 @@ services:
         arguments:
             - '@League\CommonMark\GithubFlavoredMarkdownConverter'
 
-
     twig.markdown.default:
         class: Twig\Extra\Markdown\LeagueMarkdown
         arguments:
