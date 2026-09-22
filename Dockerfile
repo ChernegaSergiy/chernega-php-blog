@@ -4,7 +4,7 @@ FROM php:8.2-fpm-alpine
 RUN apk add --no-cache \
     nginx \
     supervisor \
-    sqlite \
+    sqlite sqlite-dev \
     libzip-dev \
     unzip \
     && docker-php-ext-install pdo pdo_sqlite zip opcache
