@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: chernega-blog
+    container_name: chernega-blog-app
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./data:/var/www/html/data
+      - ./public/media:/var/www/html/public/media
+    environment:
+      - APP_ENV=prod
+      - APP_DEBUG=0
+      - DATABASE_URL=sqlite:///%kernel.project_dir%/data/blog.db

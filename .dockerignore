@@ -1,0 +1,9 @@
+.git
+.github
+var/
+vendor/
+.idea
+.vscode
+data/blog.db
+node_modules/
+public/media/*
