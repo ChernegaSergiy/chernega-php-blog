@@ -50,7 +50,7 @@
                         <input type="hidden" name="_token" value="{{ csrf_token('media') }}">
                         <input type="hidden" name="limit" value="{{ media_stats.limit }}">
                         <input type="hidden" name="offset" value="{{ media_stats.offset }}">
-                        <button type="submit" class="sol-btn sol-btn--danger sol-btn--outline">Housekeeping</button>
+                        <button type="submit" class="sol-btn sol-btn--error sol-btn--outline">Housekeeping</button>
                     </form>
                 {% endif %}
             </div>
@@ -111,7 +111,7 @@
                                             <input type="hidden" name="_token" value="{{ csrf_token('media') }}">
                                             <input type="hidden" name="limit" value="{{ media_stats.limit }}">
                                             <input type="hidden" name="offset" value="{{ media_stats.offset }}">
-                                            <button type="submit" class="sol-btn sol-btn--sm sol-btn--danger">Delete</button>
+                                            <button type="submit" class="sol-btn sol-btn--sm sol-btn--error">Delete</button>
                                         </form>
                                     {% endif %}
                                 </div>
