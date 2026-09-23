@@ -41,6 +41,7 @@ class AdminPostController extends AbstractController
         $post->setTitle($title);
         $post->setContent($content);
         $post->setCategory($category);
+        $post->setStatus(in_array($request->request->get('status'), ['published', 'draft']) ? $request->request->get('status') : 'draft');
         $post->setSlug($slug);
         $post->setMetaTitle($request->request->get('meta_title'));
         $post->setMetaDescription($request->request->get('meta_description'));
