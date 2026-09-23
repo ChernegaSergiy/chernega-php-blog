@@ -40,7 +40,30 @@ class AdminPostController extends AbstractController
 
         $post->setTitle($title);
         $post->setContent($content);
-        $post->setCategory($category);
+
+        // Process categories (comma-separated)
+        $categoryNames = array_map('trim', explode(',', $category));
+        $categoryRepo = $em->getRepository(\App\Entity\Category::class);
+        
+        // Remove old categories not in the new list
+        foreach ($post->getCategories() as $existingCat) {
+            if (!in_array($existingCat->getName(), $categoryNames)) {
+                $post->removeCategory($existingCat);
+            }
+        }
+        
+        // Add new categories
+        foreach ($categoryNames as $catName) {
+            if (!$catName) continue;
+            
+            $catEntity = $categoryRepo->findOneBy(['name' => $catName]);
+            if (!$catEntity) {
+                $catEntity = new \App\Entity\Category();
+                $catEntity->setName($catName);
+                $em->persist($catEntity);
+            }
+            $post->addCategory($catEntity);
+        }
         $post->setStatus(in_array($request->request->get('status'), ['published', 'draft']) ? $request->request->get('status') : 'draft');
         $post->setSlug($slug);
         $post->setMetaTitle($request->request->get('meta_title'));

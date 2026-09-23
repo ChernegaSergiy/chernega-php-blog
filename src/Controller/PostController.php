@@ -31,7 +31,8 @@ class PostController extends AbstractController
         }
 
         if ($category) {
-            $qb->andWhere('p.category = :category')
+            $qb->join('p.categories', 'c')
+               ->andWhere('c.name = :category')
                ->setParameter('category', $category);
         }
 
@@ -47,12 +48,13 @@ class PostController extends AbstractController
                     ->getQuery()
                     ->getResult();
 
-        $categories = $entityManager->getRepository(Post::class)->createQueryBuilder('p')
-            ->select('p.category')
+        $categories = $entityManager->getRepository(\App\Entity\Category::class)->createQueryBuilder('c')
+            ->select('c.name')
+            ->join('c.posts', 'p')
             ->where('p.status = :status')
             ->setParameter('status', 'published')
             ->distinct()
-            ->orderBy('p.category', 'ASC')
+            ->orderBy('c.name', 'ASC')
             ->getQuery()
             ->getSingleColumnResult();
 
