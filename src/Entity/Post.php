@@ -65,6 +65,8 @@ class Post
     public function setArticleImage(?string $article_image): static { $this->article_image = $article_image; return $this; }
     public function getSlug(): ?string { return $this->slug; }
     public function setSlug(?string $slug): static { $this->slug = $slug; return $this; }
+    public function getStatus(): string { return $this->status; }
+    public function setStatus(string $status): static { $this->status = $status; return $this; }
     public function getMetaTitle(): ?string { return $this->meta_title; }
     public function setMetaTitle(?string $meta_title): static { $this->meta_title = $meta_title; return $this; }
     public function getMetaDescription(): ?string { return $this->meta_description; }
