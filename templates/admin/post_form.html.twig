@@ -27,6 +27,13 @@
                 <label for="category" class="sol-label">Category</label>
                 <input type="text" id="category" name="category" class="sol-input" required value="{{ post.category }}">
             </div>
+            <div class="sol-form-group">
+                <label for="status" class="sol-label">Status</label>
+                <select id="status" name="status" class="sol-input">
+                    <option value="draft" {% if post.status == 'draft' %}selected{% endif %}>Draft</option>
+                    <option value="published" {% if post.status == 'published' %}selected{% endif %}>Published</option>
+                </select>
+            </div>
 
             <div class="sol-card sol-mb-md">
                 <div class="sol-card__header">Meta Fields & SEO</div>
