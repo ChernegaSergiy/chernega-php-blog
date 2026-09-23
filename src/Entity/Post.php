@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'posts')]
@@ -20,8 +22,9 @@ class Post
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $category = null;
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'posts')]
+    #[ORM\JoinTable(name: 'post_category')]
+    private Collection $categories;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
     private \DateTimeInterface $updated_at;
@@ -48,6 +51,7 @@ class Post
     {
         $this->created_at = new \DateTimeImmutable();
         $this->updated_at = new \DateTimeImmutable();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int { return $this->id; }
@@ -55,8 +59,22 @@ class Post
     public function setTitle(string $title): static { $this->title = $title; return $this; }
     public function getContent(): ?string { return $this->content; }
     public function setContent(string $content): static { $this->content = $content; return $this; }
-    public function getCategory(): ?string { return $this->category; }
-    public function setCategory(string $category): static { $this->category = $category; return $this; }
+    
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection { return $this->categories; }
+    public function addCategory(Category $category): static {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+        return $this;
+    }
+    public function removeCategory(Category $category): static {
+        $this->categories->removeElement($category);
+        return $this;
+    }
+    
     public function getUpdatedAt(): \DateTimeInterface { return $this->updated_at; }
     public function setUpdatedAt(\DateTimeInterface $updated_at): static { $this->updated_at = $updated_at; return $this; }
     public function getCreatedAt(): \DateTimeInterface { return $this->created_at; }
