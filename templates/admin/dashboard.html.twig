@@ -34,6 +34,7 @@
                             <th>ID</th>
                             <th>Title</th>
                             <th>Category</th>
+                            <th>Status</th>
                             <th>Created</th>
                             <th>Updated</th>
                             {% if can_edit_content %}<th class="sol-text-right">Actions</th>{% endif %}
@@ -45,6 +46,13 @@
                                 <td>{{ post.id }}</td>
                                 <td>{{ post.title }}</td>
                                 <td>{{ post.category }}</td>
+                                <td>
+                                    {% if post.status == 'published' %}
+                                        <span class="sol-badge sol-badge--success">Published</span>
+                                    {% else %}
+                                        <span class="sol-badge sol-badge--warning">Draft</span>
+                                    {% endif %}
+                                </td>
                                 <td>{{ post.createdAt|date('Y-m-d H:i') }}</td>
                                 <td>{{ post.updatedAt|date('Y-m-d H:i') }}</td>
                                 {% if can_edit_content %}
