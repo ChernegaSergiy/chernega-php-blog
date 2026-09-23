@@ -24,8 +24,8 @@
                 <input type="text" id="title" name="title" class="sol-input" required value="{{ post.title }}">
             </div>
             <div class="sol-form-group">
-                <label for="category" class="sol-label">Category</label>
-                <input type="text" id="category" name="category" class="sol-input" required value="{{ post.category }}">
+                <label for="category" class="sol-label">Categories (comma-separated)</label>
+                <input type="text" id="category" name="category" class="sol-input" required value="{% if post.categories is defined %}{{ post.categories|map(c => c.name)|join(', ') }}{% endif %}">
             </div>
             <div class="sol-form-group">
                 <label for="status" class="sol-label">Status</label>
