@@ -45,7 +45,11 @@
                             <tr>
                                 <td>{{ post.id }}</td>
                                 <td>{{ post.title }}</td>
-                                <td>{{ post.category }}</td>
+                                <td>
+                                    {% for cat in post.categories %}
+                                        <span class="sol-badge sol-badge--secondary">{{ cat.name }}</span>
+                                    {% endfor %}
+                                </td>
                                 <td>
                                     {% if post.status == 'published' %}
                                         <span class="sol-badge sol-badge--success">Published</span>
