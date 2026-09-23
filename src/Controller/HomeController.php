@@ -17,8 +17,8 @@ class HomeController extends AbstractController
         $limitSetting = $settingRepo->findOneBy(['setting_name' => 'posts_per_page']);
         $limit = $limitSetting ? (int)$limitSetting->getSettingValue() : 5;
 
-        $posts = $entityManager->getRepository(Post::class)->findBy([], ['created_at' => 'DESC'], $limit);
-        $totalPosts = $entityManager->getRepository(Post::class)->count([]);
+        $posts = $entityManager->getRepository(Post::class)->findBy(['status' => 'published'], ['created_at' => 'DESC'], $limit);
+        $totalPosts = $entityManager->getRepository(Post::class)->count(['status' => 'published']);
 
         return $this->render('home.html.twig', [
             'posts' => $posts,

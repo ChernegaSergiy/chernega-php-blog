@@ -21,10 +21,12 @@ class PostController extends AbstractController
         $limitSetting = $settingRepo->findOneBy(['setting_name' => 'posts_per_page']);
         $limit = $limitSetting ? (int)$limitSetting->getSettingValue() : 10;
 
-        $qb = $entityManager->getRepository(Post::class)->createQueryBuilder('p');
+        $qb = $entityManager->getRepository(Post::class)->createQueryBuilder('p')
+            ->where('p.status = :status')
+            ->setParameter('status', 'published');
 
         if ($search) {
-            $qb->andWhere('p.title LIKE :search OR p.content LIKE :search')
+            $qb->andWhere('(p.title LIKE :search OR p.content LIKE :search)')
                ->setParameter('search', '%' . $search . '%');
         }
 
@@ -47,6 +49,8 @@ class PostController extends AbstractController
 
         $categories = $entityManager->getRepository(Post::class)->createQueryBuilder('p')
             ->select('p.category')
+            ->where('p.status = :status')
+            ->setParameter('status', 'published')
             ->distinct()
             ->orderBy('p.category', 'ASC')
             ->getQuery()
@@ -75,7 +79,7 @@ class PostController extends AbstractController
     {
         $post = $entityManager->getRepository(Post::class)->findOneBy(['slug' => $slug]);
 
-        if (!$post) {
+        if (!$post || ($post->getStatus() !== 'published' && !$this->isGranted('ROLE_EDITOR') && !$this->isGranted('ROLE_ADMIN'))) {
             throw $this->createNotFoundException('Post not found');
         }
 
