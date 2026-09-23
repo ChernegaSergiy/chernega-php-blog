@@ -34,7 +34,11 @@
             <h1>{{ post.title }}</h1>
             <div class="text-sm text-muted">
                 <span>{{ post.createdAt|date('d.m.Y') }}</span> |
-                <span>category: <a href="{{ path('app_post_index', {category: post.category}) }}">{{ post.category }}</a></span>
+                <span>categories: 
+                    {% for cat in post.categories %}
+                        <a href="{{ path('app_post_index', {category: cat.name}) }}">{{ cat.name }}</a>{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </span>
             </div>
         </div>
 
