@@ -35,6 +35,9 @@ class Post
     #[ORM\Column(length: 255, nullable: true, unique: true)]
     private ?string $slug = null;
 
+    #[ORM\Column(length: 20, options: ["default" => "draft"])]
+    private string $status = 'draft';
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $meta_title = null;
 
