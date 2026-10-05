@@ -135,7 +135,7 @@ Roles are stored inside the `admins` table (`role` column).
 
 - Every privileged action (sign-in/out, post CRUD, media operations, housekeeping) is written to the `audit_logs` table.
 - The admin dashboard (/admin/) surfaces the most recent events, showing timestamp, actor, entity, metadata, and IP address.
-- Extend logging by calling `adminAudit()` inside custom workflows – metadata accepts arbitrary arrays and is stored as JSON.
+- Extend logging by calling `adminAudit()` inside custom workflows — metadata accepts arbitrary arrays and is stored as JSON.
 
 ## Twig Templates
 
