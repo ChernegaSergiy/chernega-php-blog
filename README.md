@@ -175,7 +175,7 @@ All styling relies on `assets/css/main.css` (Solarized terminal aesthetic). Java
 ## Troubleshooting
 
 - **Blank page / HTTP 500** — PHP error. Check `var/log/dev.log` or the Symfony Web Profiler.
-- **Posts missing on homepage** — Empty `posts` table. Add records via admin tooling or direct SQL.
+- **Posts missing on homepage** — empty `posts` table. Add records via admin tooling or direct SQL.
 
 ## Contributing
 
