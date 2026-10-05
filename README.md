@@ -100,11 +100,11 @@ php -S 127.0.0.1:8000 -t public/
 
 Then open <http://127.0.0.1:8000/> in your browser. Frequently used entry points:
 
-- `/` – homepage with the most recent posts.
-- `/posts` – full archive with pagination, category filter, and search.
-- `/post/{slug}` – view post by slug.
-- `/about`, `/contact` – static pages.
-- `/admin/` – administrative dashboard (requires authentication).
+- `/` — homepage with the most recent posts.
+- `/posts` — full archive with pagination, category filter, and search.
+- `/post/{slug}` — view post by slug.
+- `/about`, `/contact` — static pages.
+- `/admin/` — administrative dashboard (requires authentication).
 
 To serve behind Apache/Nginx, configure the document root to the `public/` directory and use the standard Symfony front controller routing.
 
