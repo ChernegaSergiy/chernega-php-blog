@@ -141,12 +141,12 @@ Roles are stored inside the `admins` table (`role` column).
 
 `templates/` is organised by feature:
 
-- `base.html.twig` – shared layout, navigation, and footer.
-- `home.html.twig` – homepage (recent posts).
-- `posts/index.html.twig` – list view + pagination.
-- `posts/show.html.twig` – single post view (metadata aware).
-- `static/` – simple static pages (`about`, `contact`, `404`).
-- `tools/` – interactive utilities (`mermaid`, `license-generator`).
+- `base.html.twig` — shared layout, navigation, and footer.
+- `home.html.twig` — homepage (recent posts).
+- `posts/index.html.twig` — list view + pagination.
+- `posts/show.html.twig` — single post view (metadata aware).
+- `static/` — simple static pages (`about`, `contact`, `404`).
+- `tools/` — interactive utilities (`mermaid`, `license-generator`).
 
 Modify the navigation or footer once in `base.html.twig`. Controller PHP files convert database rows into view models via helper functions, ensuring templates stay presentation-focused.
 
